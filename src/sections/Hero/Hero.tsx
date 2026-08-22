@@ -5,22 +5,6 @@ import { profile } from "../../data/profile";
 export function Hero() {
   return (
     <section className="hero-section" id="top">
-      <div className="hero-topology" aria-hidden="true">
-        <div className="topology-frame">
-          <span className="topology-label">Live system route</span>
-          <div className="topology-route">
-            <span className="route-node route-node--origin" />
-            <span className="route-node route-node--mid" />
-            <span className="route-node route-node--target" />
-            <span className="route-signal" />
-          </div>
-          <div className="topology-readouts">
-            <span>API</span>
-            <span>SQL</span>
-            <span>UI</span>
-          </div>
-        </div>
-      </div>
       <div className="hero-content">
         <p className="eyebrow">Andres Botia / Software engineer / Florida</p>
         <h1>{profile.headline}</h1>
