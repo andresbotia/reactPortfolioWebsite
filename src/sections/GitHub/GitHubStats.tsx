@@ -18,11 +18,6 @@ export function GitHubStats() {
       <div className="section-kicker">GitHub</div>
       <div className="section-heading-row">
         <h2>Live public engineering signals.</h2>
-        <p>
-          This section reads Andres&apos;s public GitHub profile and repositories at runtime. The
-          commit count reflects public authored commits this year; the private contribution calendar
-          still needs an authenticated server-side GraphQL call.
-        </p>
       </div>
       <div className="github-panel">
         {loading ? (

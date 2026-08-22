@@ -4,7 +4,7 @@ export const profile = {
   role: "Software engineer",
   headline: "Andres Botia",
   summary:
-    "Software engineer with a computer science background, public front-end portfolio work, and a focus on practical systems across modern interfaces, backend services, APIs, SQL/data, automation, IBM i/RPG environments, aviation technology, and operational software.",
+    "Full-stack engineer with a focus on practical systems across modern interfaces, APIs, SQL/data, automation, IBM i/RPG environments, aviation technology, and operational software.",
   location: "Deerfield Beach, Florida",
   email: "andresfbotia@gmail.com",
   phone: "786-691-6711",

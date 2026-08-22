@@ -5,12 +5,7 @@ export function Experience() {
     <section className="section experience-section" id="experience">
       <div className="section-kicker">Experience</div>
       <div className="section-heading-row">
-        <h2>Software engineering across aviation, enterprise systems, and modern product work.</h2>
-        <p>
-          Public profile details show current software engineering work at Banyan Air Service, a
-          computer science background from Florida Atlantic University, and shipped personal
-          software across web, mobile, and full-stack systems.
-        </p>
+        <h2>Software engineering experience.</h2>
       </div>
       <div className="timeline">
         {experience.map((item) => (

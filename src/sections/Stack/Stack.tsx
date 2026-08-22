@@ -6,9 +6,6 @@ export function Stack() {
       <div className="section-kicker">Stack</div>
       <div className="section-heading-row">
         <h2>Technologies organized by responsibility.</h2>
-        <p>
-          The stack avoids logo clutter and focuses on the roles technologies play in real systems.
-        </p>
       </div>
       <div className="stack-grid">
         {skillGroups.map((group) => (

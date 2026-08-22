@@ -17,8 +17,8 @@ export default function App() {
       <main>
         <Hero />
         <Experience />
-        <GitHubStats />
         <Work />
+        <GitHubStats />
         <Stack />
         <Contact />
       </main>

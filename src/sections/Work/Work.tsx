@@ -21,13 +21,6 @@ export function Work() {
   return (
     <section className="section work-section" id="work">
       <div className="section-kicker">Featured Work</div>
-      <div className="section-heading-row">
-        <h2>Projects treated like products, not thumbnails.</h2>
-        <p>
-          Public work from the current portfolio has been recast into case-study compositions with
-          problem, system, engineering, and result where available.
-        </p>
-      </div>
       <div className="project-list">
         {projects.map((project, index) => (
           <ProjectCase key={project.name} project={project} index={index} />
