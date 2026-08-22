@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
 type DitherWavesProps = {
-  muted?: boolean;
+  scrollProgress: number;
 };
 
 const vertexShader = `
@@ -21,7 +21,9 @@ precision highp float;
 
 uniform vec2 resolution;
 uniform float time;
-uniform float muted;
+uniform vec2 pointer;
+uniform float pointerStrength;
+uniform float scrollProgress;
 
 varying vec2 vUv;
 
@@ -118,12 +120,19 @@ void main() {
   vec2 uv = gl_FragCoord.xy / resolution.xy;
   vec2 centered = uv - 0.5;
   centered.x *= resolution.x / resolution.y;
+  vec2 pointerUv = pointer - 0.5;
+  pointerUv.x *= resolution.x / resolution.y;
+  float pointerDistance = length(centered - pointerUv);
+  float pointerField = 1.0 - smoothstep(0.0, 0.38, pointerDistance);
+  vec2 reactiveCoord = centered + normalize(centered - pointerUv + vec2(0.001)) * pointerField * pointerStrength * 0.08;
 
-  float slowTime = time * 0.075;
-  float largeWave = fbm(centered * 1.55 + vec2(slowTime, -slowTime * 0.74));
-  float detailWave = fbm(centered * 4.2 - vec2(slowTime * 1.4, slowTime));
-  float band = sin((centered.x * 1.35 - centered.y * 1.85 + largeWave * 1.35 - slowTime) * 4.2) * 0.5 + 0.5;
-  float field = clamp(largeWave * 0.72 + detailWave * 0.22 + band * 0.18, 0.0, 1.0);
+  float scrollShift = scrollProgress * 2.8;
+  float slowTime = time * 0.075 + scrollShift;
+  float largeWave = fbm(reactiveCoord * 1.55 + vec2(slowTime, -slowTime * 0.74));
+  float detailWave = fbm(reactiveCoord * 4.2 - vec2(slowTime * 1.4, slowTime + scrollProgress));
+  float band =
+    sin((reactiveCoord.x * 1.35 - reactiveCoord.y * 1.85 + largeWave * 1.35 - slowTime) * 4.2) * 0.5 + 0.5;
+  float field = clamp(largeWave * 0.72 + detailWave * 0.22 + band * 0.18 + pointerField * pointerStrength * 0.2, 0.0, 1.0);
 
   vec3 deep = vec3(0.01, 0.018, 0.03);
   vec3 cyan = vec3(0.18, 0.72, 0.9);
@@ -136,24 +145,48 @@ void main() {
 
   float vignette = smoothstep(0.92, 0.18, length(centered));
   color *= 0.34 + vignette * 0.72;
-  color *= mix(0.78, 1.0, muted);
+  color = mix(color, vec3(0.22, 0.82, 0.55), pointerField * pointerStrength * 0.2);
 
   color = orderedDither(gl_FragCoord.xy, color, 5.0, 3.0);
   gl_FragColor = vec4(color, 1.0);
 }
 `;
 
-function DitherWaves({ muted = false }: DitherWavesProps) {
+function DitherWaves({ scrollProgress }: DitherWavesProps) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const pointerTargetRef = useRef(new THREE.Vector2(0.5, 0.5));
+  const pointerCurrentRef = useRef(new THREE.Vector2(0.5, 0.5));
+  const pointerStrengthRef = useRef(0);
   const { size, gl } = useThree();
   const initialUniforms = useMemo(
     () => ({
       resolution: new THREE.Uniform(new THREE.Vector2(1, 1)),
       time: new THREE.Uniform(0),
-      muted: new THREE.Uniform(muted ? 0 : 1),
+      pointer: new THREE.Uniform(new THREE.Vector2(0.5, 0.5)),
+      pointerStrength: new THREE.Uniform(0),
+      scrollProgress: new THREE.Uniform(0),
     }),
-    [muted],
+    [],
   );
+
+  useEffect(() => {
+    const updatePointer = (clientX: number, clientY: number) => {
+      pointerTargetRef.current.set(clientX / window.innerWidth, 1 - clientY / window.innerHeight);
+      pointerStrengthRef.current = 1;
+    };
+    const handlePointerMove = (event: PointerEvent) => updatePointer(event.clientX, event.clientY);
+    const handleTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) updatePointer(touch.clientX, touch.clientY);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, []);
 
   useEffect(() => {
     const material = materialRef.current;
@@ -167,8 +200,13 @@ function DitherWaves({ muted = false }: DitherWavesProps) {
     const material = materialRef.current;
     if (!material) return;
 
+    pointerCurrentRef.current.lerp(pointerTargetRef.current, 0.08);
+    pointerStrengthRef.current *= 0.94;
+
     material.uniforms.time.value = clock.getElapsedTime();
-    material.uniforms.muted.value = muted ? 0 : 1;
+    material.uniforms.pointer.value.copy(pointerCurrentRef.current);
+    material.uniforms.pointerStrength.value = pointerStrengthRef.current;
+    material.uniforms.scrollProgress.value = scrollProgress;
   });
 
   return (
@@ -186,7 +224,7 @@ function DitherWaves({ muted = false }: DitherWavesProps) {
   );
 }
 
-export default function DitherBackground({ muted = false }: DitherWavesProps) {
+export default function DitherBackground({ scrollProgress }: DitherWavesProps) {
   return (
     <Canvas
       className="dither-canvas"
@@ -194,7 +232,7 @@ export default function DitherBackground({ muted = false }: DitherWavesProps) {
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       camera={{ position: [0, 0, 1] }}
     >
-      <DitherWaves muted={muted} />
+      <DitherWaves scrollProgress={scrollProgress} />
     </Canvas>
   );
 }

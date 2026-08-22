@@ -67,9 +67,9 @@ body::before {
 }
 
 .site-dither-background {
-  opacity: calc(0.18 + (var(--hero-blend) * 0.34));
+  opacity: calc(var(--hero-blend) * 0.52);
   mask-image:
-    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, var(--hero-blend)) 14%, black 32%, black 86%, transparent 100%);
+    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, var(--hero-blend)) 18%, black 36%, black 86%, transparent 100%);
   transition: opacity 120ms linear;
 }
 
@@ -282,19 +282,6 @@ main {
   background: linear-gradient(to bottom, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.72) 58%, var(--bg));
 }
 
-.hero-visual {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  mask-image: linear-gradient(to bottom, black 0 62%, rgba(0, 0, 0, 0.72) 78%, transparent 100%);
-}
-
-.hero-canvas,
-.hero-fallback {
-  width: 100%;
-  height: 100%;
-}
-
 .hero-content {
   width: min(100%, var(--max));
   margin: 0 auto;
@@ -383,75 +370,6 @@ main {
   align-items: center;
   gap: 8px;
   color: var(--muted);
-}
-
-.hero-fallback {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 66% 38%, rgba(123, 220, 255, 0.16), transparent 24rem),
-    linear-gradient(180deg, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.96));
-}
-
-.radar-grid {
-  position: absolute;
-  inset: 12% 4% auto auto;
-  width: min(62vw, 760px);
-  aspect-ratio: 1;
-  border: 1px solid rgba(123, 220, 255, 0.13);
-  border-radius: 50%;
-}
-
-.radar-grid span {
-  position: absolute;
-  inset: calc(var(--i) * 7%);
-  border: 1px solid rgba(123, 220, 255, 0.08);
-  border-radius: 50%;
-}
-
-.fallback-route {
-  position: absolute;
-  width: 42vw;
-  height: 20vw;
-  border-top: 1px solid rgba(123, 220, 255, 0.4);
-  border-radius: 50%;
-  transform: rotate(-18deg);
-}
-
-.fallback-route--a {
-  top: 28%;
-  right: 9%;
-}
-
-.fallback-route--b {
-  top: 48%;
-  right: 19%;
-  width: 34vw;
-  transform: rotate(18deg);
-}
-
-.fallback-node {
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--accent);
-  box-shadow: 0 0 24px var(--accent);
-}
-
-.fallback-node--one {
-  top: 33%;
-  right: 24%;
-}
-
-.fallback-node--two {
-  top: 52%;
-  right: 43%;
-}
-
-.fallback-node--three {
-  top: 41%;
-  right: 10%;
 }
 
 .section {
@@ -984,7 +902,7 @@ main {
   }
 
   .site-dither-background {
-    opacity: calc(0.12 + (var(--hero-blend) * 0.28));
+    opacity: calc(var(--hero-blend) * 0.4);
   }
 
   .case-grid {

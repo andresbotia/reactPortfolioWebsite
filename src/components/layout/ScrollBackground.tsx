@@ -63,7 +63,7 @@ export function ScrollBackground() {
     >
       <ErrorBoundary fallback={<div className="dither-fallback" />}>
         <Suspense fallback={<div className="dither-fallback" />}>
-          <DitherBackground muted={heroBlend < 0.18} />
+          <DitherBackground scrollProgress={scrollProgress} />
         </Suspense>
       </ErrorBoundary>
     </div>

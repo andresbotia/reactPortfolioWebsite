@@ -48,7 +48,7 @@ src/
   sections/        Page sections
   styles/          Global design system
   three/
-    scenes/        WebGL hero and dither background scenes
+    scenes/        WebGL dither background scene
     utils/         Reserved for Three.js helpers
 ```
 
@@ -62,7 +62,7 @@ The site-wide dither background is adapted from the React Bits Dither background
 
 ## Performance
 
-The site uses isolated WebGL canvases for the hero and dithered procedural background. Both are lazy-loaded, use capped DPR, and drop to static fallback behavior when reduced motion or missing WebGL is detected.
+The site uses a lazy-loaded WebGL canvas for the dithered procedural background, with capped DPR and a static fallback when reduced motion is enabled or WebGL is unavailable.
 
 ## GitHub Stats
 
