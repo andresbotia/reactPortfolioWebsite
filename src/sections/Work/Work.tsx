@@ -1,7 +1,14 @@
 import { ChevronDown, ExternalLink } from "lucide-react";
-import type { CSSProperties } from "react";
 import { useState } from "react";
 import { projects } from "../../data/projects";
+
+const yearlyTrackerShots = [
+  { src: "/yearly-tracker-goals.png", label: "Goals" },
+  { src: "/yearly-tracker-habits.png", label: "Habits" },
+  { src: "/yearly-tracker-widgets.png", label: "Widgets" },
+  { src: "/yearly-tracker-history.png", label: "History" },
+  { src: "/yearly-tracker-themes.png", label: "Themes" },
+];
 
 export function Work() {
   return (
@@ -125,25 +132,13 @@ function ProjectCase({ project, index }: { project: (typeof projects)[number]; i
 function ProjectVisual({ project }: { project: (typeof projects)[number] }) {
   if (project.visual === "yearly-tracker") {
     return (
-      <div className="app-simulation">
-        <div className="phone-shell">
-          <div className="phone-status">
-            <span>2026</span>
-            <span>72%</span>
-          </div>
-          <div className="app-header">
-            <span>Yearly Tracker</span>
-            <strong>Build consistent systems.</strong>
-          </div>
-          <div className="progress-ring" aria-hidden="true">
-            <span>68%</span>
-          </div>
-          <div className="habit-list">
-            <span style={{ "--fill": "82%" } as CSSProperties}>Ship work</span>
-            <span style={{ "--fill": "64%" } as CSSProperties}>Train</span>
-            <span style={{ "--fill": "48%" } as CSSProperties}>Read</span>
-          </div>
-        </div>
+      <div className="yearly-tracker-carousel">
+        {yearlyTrackerShots.map((shot, index) => (
+          <figure className={`yearly-tracker-shot yearly-tracker-shot--${index + 1}`} key={shot.src}>
+            <img src={shot.src} alt="" loading="lazy" decoding="async" />
+            <figcaption>{shot.label}</figcaption>
+          </figure>
+        ))}
       </div>
     );
   }
