@@ -5,6 +5,7 @@ import { profile } from "../../data/profile";
 const navItems = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
+  { label: "GitHub", href: "#github" },
   { label: "Work", href: "#work" },
   { label: "Stack", href: "#stack" },
   { label: "Contact", href: "#contact" },

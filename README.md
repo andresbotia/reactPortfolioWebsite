@@ -48,7 +48,7 @@ src/
   sections/        Page sections
   styles/          Global design system
   three/
-    scenes/        WebGL hero scene
+    scenes/        WebGL hero and scroll voxel scenes
     utils/         Reserved for Three.js helpers
 ```
 
@@ -60,7 +60,11 @@ ThreeUI Community is MIT licensed. No ThreeUI source files or assets are redistr
 
 ## Performance
 
-The site uses one WebGL canvas, only in the hero. It is lazy-loaded, unmounted when offscreen, uses capped DPR, and drops to a static fallback when reduced motion or missing WebGL is detected.
+The site uses isolated WebGL canvases for the hero and scroll-reactive voxel background. Both are lazy-loaded, use capped DPR, and drop to static fallback behavior when reduced motion or missing WebGL is detected.
+
+## GitHub Stats
+
+The GitHub section fetches public GitHub REST API data for `andresbotia` at runtime. The official contributions calendar is not fetched client-side because it requires authenticated GraphQL access; add a server function if contribution history needs to be shown without exposing a token.
 
 ## Accessibility
 

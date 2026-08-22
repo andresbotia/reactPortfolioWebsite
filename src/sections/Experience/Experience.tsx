@@ -29,6 +29,21 @@ export function Experience() {
             </div>
           </article>
         ))}
+        <article className="timeline-item timeline-item--brief">
+          <p className="eyebrow">Next content pass</p>
+          <h3>Confirmed professional timeline needed</h3>
+          <p>
+            To turn this into a stronger resume-grade section, provide employer names, titles,
+            exact dates, locations, products or systems owned, and outcomes that can be stated
+            without guessing. The layout is ready for those entries.
+          </p>
+          <div className="tag-row">
+            <span>Employers</span>
+            <span>Titles</span>
+            <span>Dates</span>
+            <span>Outcomes</span>
+          </div>
+        </article>
       </div>
     </section>
   );

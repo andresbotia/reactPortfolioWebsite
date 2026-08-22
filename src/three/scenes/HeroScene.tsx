@@ -75,8 +75,8 @@ function RouteSystem() {
     [routes],
   );
 
-  useFrame(({ clock, camera }) => {
-    const elapsed = clock.getElapsedTime();
+  useFrame(({ camera }) => {
+    const elapsed = Date.now() * 0.001;
     if (groupRef.current) {
       groupRef.current.rotation.y = elapsed * 0.055 + pointer.x * 0.1;
       groupRef.current.rotation.x = -0.12 + pointer.y * 0.06;

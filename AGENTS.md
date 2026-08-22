@@ -23,7 +23,7 @@ Keep the site premium, minimal, technical, aviation-influenced, interactive, and
 
 # ThreeUI / Three.js
 
-ThreeUI Community is an implementation reference for lifecycle, procedural visuals, interaction, and performance patterns. Do not turn this project into a ThreeUI demo gallery. The primary Three.js scene is the hero route/system topology in `src/three/scenes/HeroScene.tsx`.
+ThreeUI Community is an implementation reference for lifecycle, procedural visuals, interaction, and performance patterns. Do not turn this project into a ThreeUI demo gallery. The primary Three.js scenes are the hero route/system topology in `src/three/scenes/HeroScene.tsx` and scroll-reactive voxel field in `src/three/scenes/ScrollVoxelField.tsx`.
 
 Only add new WebGL effects when they clearly improve the portfolio narrative. Prefer one exceptional scene over multiple competing canvases.
 
@@ -35,6 +35,7 @@ Only add new WebGL effects when they clearly improve the portfolio narrative. Pr
 - Avoid giant components.
 - Avoid duplicated content.
 - Avoid unnecessary dependencies.
+- Do not fetch authenticated data directly from the client. GitHub contribution history requires a server-side token if implemented.
 
 # Styling Rules
 
