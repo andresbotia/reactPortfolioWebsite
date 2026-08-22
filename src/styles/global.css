@@ -225,6 +225,17 @@ main {
   gap: 4px;
 }
 
+.nav-actions a:not(.resume-link) {
+  width: 40px;
+  padding: 0;
+}
+
+.social-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
 .resume-link {
   border: 1px solid var(--line-strong);
 }
