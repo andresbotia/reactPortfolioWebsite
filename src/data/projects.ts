@@ -10,9 +10,52 @@ export type Project = {
   result?: string;
   technologies: string[];
   href?: string;
+  links?: {
+    label: string;
+    href: string;
+  }[];
 };
 
 export const projects: Project[] = [
+  {
+    name: "Yearly Tracker",
+    date: "Jan 24, 2026",
+    label: "Published Mobile App",
+    description:
+      "An offline-first mobile app for setting yearly goals, tracking habits, and measuring progress across the year.",
+    createdFor:
+      "Published personal product for iOS and Android, with public source available on GitHub.",
+    problem:
+      "Yearly goals and daily habits often end up split across notes, spreadsheets, and apps that add account, sync, or analytics overhead.",
+    system:
+      "Expo and React Native app with yearly goals, habit tracking, dashboard summaries, widgets, local device storage, and customizable color themes.",
+    engineering: [
+      "Expo",
+      "React Native",
+      "AsyncStorage",
+      "iOS",
+      "Android",
+      "Kotlin",
+      "Swift",
+    ],
+    result:
+      "Shipped as a privacy-first app with no accounts, ads, analytics, tracking, subscriptions, or cloud syncing.",
+    technologies: ["Expo", "React Native", "JavaScript", "iOS", "Android"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/andresbotia/yearly-tracker",
+      },
+      {
+        label: "App Store",
+        href: "https://apps.apple.com/us/app/yearly-tracker/id6757343606",
+      },
+      {
+        label: "Google Play",
+        href: "https://play.google.com/store/apps/details?id=com.andresbotia.yearlytracker&hl=en_US",
+      },
+    ],
+  },
   {
     name: "Twitter Revenue Chrome Extension",
     date: "Dec 14, 2023",

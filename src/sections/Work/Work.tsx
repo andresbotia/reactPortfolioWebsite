@@ -25,6 +25,8 @@ export function Work() {
 function ProjectCase({ project, index }: { project: (typeof projects)[number]; index: number }) {
   const [expanded, setExpanded] = useState(index === 0);
   const panelId = `case-study-${index}`;
+  const projectLinks =
+    project.links ?? (project.href ? [{ label: "View project", href: project.href }] : []);
 
   return (
     <article className={`project-case ${expanded ? "project-case--expanded" : ""}`}>
@@ -62,11 +64,17 @@ function ProjectCase({ project, index }: { project: (typeof projects)[number]; i
           >
             Case study <ChevronDown size={16} />
           </button>
-          {project.href ? (
-            <a className="inline-link" href={project.href} target="_blank" rel="noreferrer">
-              View project <ExternalLink size={16} />
+          {projectLinks.map((link) => (
+            <a
+              className="inline-link"
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              key={link.href}
+            >
+              {link.label} <ExternalLink size={16} />
             </a>
-          ) : null}
+          ))}
         </div>
         <div className="case-study-panel" id={panelId} hidden={!expanded}>
           <dl className="case-grid">

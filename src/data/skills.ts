@@ -1,7 +1,16 @@
 export const skillGroups = [
   {
     title: "Interface",
-    items: ["React", "TypeScript", "JavaScript", "HTML", "CSS", "Figma", "Vue.js"],
+    items: [
+      "React",
+      "React Native",
+      "TypeScript",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Figma",
+      "Vue.js",
+    ],
   },
   {
     title: "Systems",
@@ -13,6 +22,6 @@ export const skillGroups = [
   },
   {
     title: "Platform",
-    items: ["Git", "Chrome Extensions", "Vite", "Three.js"],
+    items: ["Git", "Expo", "Chrome Extensions", "Vite", "Three.js"],
   },
 ];

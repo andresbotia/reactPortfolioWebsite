@@ -758,6 +758,10 @@ main {
   font-weight: 650;
 }
 
+.project-actions .inline-link {
+  margin-top: 0;
+}
+
 .stack-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
