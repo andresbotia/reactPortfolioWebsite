@@ -1,4 +1,4 @@
-import { Activity, GitFork, Star, UserRound } from "lucide-react";
+import { Activity, GitCommitHorizontal, Star, UserRound } from "lucide-react";
 import { useGitHubStats } from "../../hooks/useGitHubStats";
 
 function formatDate(value: string | null) {
@@ -20,8 +20,8 @@ export function GitHubStats() {
         <h2>Live public engineering signals.</h2>
         <p>
           This section reads Andres&apos;s public GitHub profile and repositories at runtime. The
-          official contribution calendar needs an authenticated server-side GraphQL call, so it is
-          intentionally not faked in the browser.
+          commit count reflects public authored commits this year; the private contribution calendar
+          still needs an authenticated server-side GraphQL call.
         </p>
       </div>
       <div className="github-panel">
@@ -43,9 +43,9 @@ export function GitHubStats() {
                 <p>Total stars</p>
               </article>
               <article>
-                <GitFork size={18} />
-                <span>{stats.totalForks}</span>
-                <p>Total forks</p>
+                <GitCommitHorizontal size={18} />
+                <span>{stats.commitsThisYear ?? "Unavailable"}</span>
+                <p>{stats.currentYear} public commits</p>
               </article>
               <article>
                 <Activity size={18} />
