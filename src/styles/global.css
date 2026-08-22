@@ -568,8 +568,7 @@ main {
   color: var(--text);
 }
 
-.experience-role-tabs button:focus-visible,
-.experience-role-history button:focus-visible {
+.experience-role-tabs button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -582,44 +581,6 @@ main {
   color: var(--quiet);
   font-family: var(--mono);
   font-size: 0.82rem;
-}
-
-.experience-role-history {
-  display: grid;
-  gap: 8px;
-  margin-top: 22px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
-}
-
-.experience-role-history button {
-  display: grid;
-  gap: 4px;
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--muted);
-  text-align: left;
-  cursor: pointer;
-}
-
-.experience-role-history button:hover,
-.experience-role-history button.is-active {
-  border-color: rgba(226, 242, 255, 0.18);
-  background: rgba(226, 242, 255, 0.045);
-  color: var(--text);
-}
-
-.experience-role-history strong {
-  font-size: 0.95rem;
-}
-
-.experience-role-history span {
-  color: var(--quiet);
-  font-family: var(--mono);
-  font-size: 0.76rem;
 }
 
 .tag-row {

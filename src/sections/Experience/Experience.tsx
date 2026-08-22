@@ -45,9 +45,7 @@ function ExperienceCompany({ item }: { item: (typeof experience)[number] }) {
         ) : null}
       </div>
       <div className="timeline-meta">
-        <span>{item.company}</span>
-        <span>{activeRole.date}</span>
-        <span>{activeRole.location}</span>
+        <span>{item.location}</span>
       </div>
       <p>{activeRole.body}</p>
       <div className="tag-row">
@@ -55,21 +53,6 @@ function ExperienceCompany({ item }: { item: (typeof experience)[number] }) {
           <span key={technology}>{technology}</span>
         ))}
       </div>
-      {item.roles.length > 1 ? (
-        <div className="experience-role-history">
-          {item.roles.map((role, index) => (
-            <button
-              className={index === activeRoleIndex ? "is-active" : undefined}
-              type="button"
-              key={role.title}
-              onClick={() => setActiveRoleIndex(index)}
-            >
-              <strong>{role.title}</strong>
-              <span>{role.date}</span>
-            </button>
-          ))}
-        </div>
-      ) : null}
     </article>
   );
 }
