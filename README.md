@@ -48,23 +48,25 @@ src/
   sections/        Page sections
   styles/          Global design system
   three/
-    scenes/        WebGL hero and scroll voxel scenes
+    scenes/        WebGL hero and dither background scenes
     utils/         Reserved for Three.js helpers
 ```
 
-## ThreeUI
+## Visual References
 
 ThreeUI Community was used as an implementation reference, not as a copied visual template. The adapted concepts are lazy isolated canvases, adaptive DPR, paused offscreen rendering, WebGL fallback behavior, and restrained procedural route motion.
 
 ThreeUI Community is MIT licensed. No ThreeUI source files or assets are redistributed here.
 
+The site-wide dither background is adapted from the React Bits Dither background concept. React Bits is licensed under MIT + Commons Clause; the notice is included at `public/vendor/react-bits-LICENSE.md`.
+
 ## Performance
 
-The site uses isolated WebGL canvases for the hero and scroll-reactive voxel background. Both are lazy-loaded, use capped DPR, and drop to static fallback behavior when reduced motion or missing WebGL is detected.
+The site uses isolated WebGL canvases for the hero and dithered procedural background. Both are lazy-loaded, use capped DPR, and drop to static fallback behavior when reduced motion or missing WebGL is detected.
 
 ## GitHub Stats
 
-The GitHub section fetches public GitHub REST API data for `andresbotia` through a cached Vercel function at `/api/github-stats`, with a browser-side fallback for local Vite development. The public commit count reflects authored commits in public repositories for the current year; private contribution-calendar totals still require authenticated GraphQL access.
+The GitHub section fetches public GitHub REST API data for `andresbotia` through a cached Vercel function at `/api/github-stats`. The public commit count reflects authored commits in public repositories for the current year; private contribution-calendar totals still require authenticated GraphQL access.
 
 ## Accessibility
 

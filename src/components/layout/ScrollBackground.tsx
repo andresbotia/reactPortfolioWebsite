@@ -4,7 +4,7 @@ import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useWebGLSupported } from "../../hooks/useWebGLSupported";
 import { ErrorBoundary } from "../../lib/ErrorBoundary";
 
-const ScrollVoxelField = lazy(() => import("../../three/scenes/ScrollVoxelField"));
+const DitherBackground = lazy(() => import("../../three/scenes/DitherBackground"));
 
 function getScrollProgress() {
   const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -45,11 +45,11 @@ export function ScrollBackground() {
     };
   }, [reducedMotion, webglSupported]);
 
-  if (reducedMotion || !webglSupported) return <div className="voxel-fallback" aria-hidden="true" />;
+  if (reducedMotion || !webglSupported) return <div className="dither-fallback" aria-hidden="true" />;
 
   return (
     <div
-      className="scroll-voxel-background"
+      className="site-dither-background"
       style={
         {
           "--scroll": scrollProgress,
@@ -61,9 +61,9 @@ export function ScrollBackground() {
       }
       aria-hidden="true"
     >
-      <ErrorBoundary fallback={<div className="voxel-fallback" />}>
-        <Suspense fallback={<div className="voxel-fallback" />}>
-          <ScrollVoxelField scrollProgress={scrollProgress} />
+      <ErrorBoundary fallback={<div className="dither-fallback" />}>
+        <Suspense fallback={<div className="dither-fallback" />}>
+          <DitherBackground muted={heroBlend < 0.18} />
         </Suspense>
       </ErrorBoundary>
     </div>

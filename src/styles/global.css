@@ -58,63 +58,60 @@ body::before {
   mask-image: linear-gradient(to bottom, black, transparent 72%);
 }
 
-.scroll-voxel-background,
-.voxel-fallback {
+.site-dither-background,
+.dither-fallback {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
 }
 
-.scroll-voxel-background {
-  opacity: calc(0.12 + (var(--hero-blend) * 0.6));
-  mix-blend-mode: screen;
+.site-dither-background {
+  opacity: calc(0.18 + (var(--hero-blend) * 0.34));
   mask-image:
-    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, var(--hero-blend)) 18%, black 42%, black 82%, transparent 100%);
+    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, var(--hero-blend)) 14%, black 32%, black 86%, transparent 100%);
   transition: opacity 120ms linear;
 }
 
-.scroll-voxel-background::before,
-.scroll-voxel-background::after {
+.site-dither-background::before,
+.site-dither-background::after {
   position: absolute;
   inset: -12%;
   content: "";
-  transform: translate3d(calc(var(--scroll) * -34px), calc(var(--scroll) * -220px), 0);
+  transform: translate3d(calc(var(--scroll) * -18px), calc(var(--scroll) * -120px), 0);
   transform-origin: center;
 }
 
-.scroll-voxel-background::before {
-  opacity: 0.36;
+.site-dither-background::before {
+  opacity: 0.16;
   background-image:
-    linear-gradient(90deg, rgba(123, 220, 255, 0.2) 1px, transparent 1px),
-    linear-gradient(rgba(147, 240, 200, 0.13) 1px, transparent 1px),
-    linear-gradient(135deg, transparent 48%, rgba(76, 157, 255, 0.08) 49%, transparent 50%);
-  background-size: 34px 34px;
+    linear-gradient(90deg, rgba(123, 220, 255, 0.14) 1px, transparent 1px),
+    linear-gradient(rgba(147, 240, 200, 0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
   background-position:
-    calc(var(--scroll) * -420px) calc(var(--scroll) * 260px),
-    calc(var(--scroll) * 220px) calc(var(--scroll) * -360px),
-    calc(var(--scroll) * 120px) calc(var(--scroll) * -180px);
+    calc(var(--scroll) * -240px) calc(var(--scroll) * 140px),
+    calc(var(--scroll) * 160px) calc(var(--scroll) * -200px);
 }
 
-.scroll-voxel-background::after {
-  opacity: 0.3;
+.site-dither-background::after {
+  opacity: 0.22;
   background:
-    radial-gradient(circle at var(--pulse-a) 22%, rgba(123, 220, 255, 0.5), transparent 9%),
-    radial-gradient(circle at var(--pulse-b) 58%, rgba(147, 240, 200, 0.36), transparent 8%),
-    radial-gradient(circle at var(--pulse-c) 78%, rgba(76, 157, 255, 0.42), transparent 10%),
-    radial-gradient(circle at 64% var(--pulse-a), rgba(178, 139, 255, 0.24), transparent 8%);
-  filter: blur(8px);
+    radial-gradient(circle at var(--pulse-a) 22%, rgba(123, 220, 255, 0.28), transparent 14%),
+    radial-gradient(circle at var(--pulse-b) 58%, rgba(147, 240, 200, 0.22), transparent 12%),
+    radial-gradient(circle at var(--pulse-c) 78%, rgba(76, 157, 255, 0.24), transparent 15%);
+  filter: blur(14px);
 }
 
-.voxel-canvas {
+.dither-canvas {
   width: 100%;
   height: 100%;
 }
 
-.voxel-fallback {
+.dither-fallback {
   background:
-    linear-gradient(120deg, transparent 0 32%, rgba(123, 220, 255, 0.035) 32.2%, transparent 32.6%),
-    linear-gradient(60deg, transparent 0 52%, rgba(76, 157, 255, 0.03) 52.2%, transparent 52.6%);
+    radial-gradient(circle at 24% 18%, rgba(123, 220, 255, 0.08), transparent 28rem),
+    radial-gradient(circle at 76% 54%, rgba(147, 240, 200, 0.06), transparent 30rem),
+    linear-gradient(135deg, rgba(123, 220, 255, 0.025), transparent 46%);
 }
 
 a {
@@ -986,8 +983,8 @@ main {
     min-height: 310px;
   }
 
-  .scroll-voxel-background {
-    opacity: calc(0.08 + (var(--hero-blend) * 0.48));
+  .site-dither-background {
+    opacity: calc(0.12 + (var(--hero-blend) * 0.28));
   }
 
   .case-grid {
