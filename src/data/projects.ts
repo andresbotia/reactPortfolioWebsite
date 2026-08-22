@@ -3,6 +3,8 @@ export type Project = {
   date?: string;
   label: string;
   description: string;
+  visual?: "yearly-tracker" | "grand-slam";
+  image?: string;
   createdFor?: string;
   problem?: string;
   system?: string;
@@ -21,6 +23,7 @@ export const projects: Project[] = [
     name: "Yearly Tracker",
     date: "Jan 24, 2026",
     label: "Published Mobile App",
+    visual: "yearly-tracker",
     description:
       "An offline-first mobile app for setting yearly goals, tracking habits, and measuring progress across the year.",
     createdFor:
@@ -75,36 +78,40 @@ export const projects: Project[] = [
     href: "https://chromewebstore.google.com/detail/twitter-estimated-revenue/fognfoiolehcjbakhcmdppjalhapckno",
   },
   {
-    name: "Distantly Near",
-    date: "Dec 06, 2021",
-    label: "Full Stack Application",
+    name: "Grand Slam Insights",
+    label: "Live Full Stack Site",
+    visual: "grand-slam",
+    image: "/grand-slam-insights-home.png",
     description:
-      "A MERN social application for connecting friends through posts, likes, search, following, and friend lists.",
-    createdFor: "FAU Principles of Software Engineering Class",
+      "A full-stack MLB prediction dashboard for researching markets, model confidence, public baseball data, odds, weather, and calibration.",
+    createdFor:
+      "Live personal project published at grand-slam-insights-client.vercel.app, with a GitHub repository provided by Andres.",
     problem:
-      "The project aimed to support social connection during a period shaped by pandemic distancing.",
+      "Sports model outputs can be hard to trust when probabilities, book odds, data quality, and backtesting context are separated.",
     system:
-      "A MERN application with account creation, login, posting, likes, user search, follows, and friends lists.",
-    engineering: ["React.js", "Node.js", "Express.js", "MongoDB", "Postman"],
+      "React dashboard with market cards for winner, total runs, NRFI, and props, backed by Express, Supabase, MLB data, odds, weather, snapshots, backfills, and calibration data.",
+    engineering: [
+      "React",
+      "shadcn-style UI",
+      "Express",
+      "Supabase",
+      "MLB Stats API",
+      "The Odds API",
+      "Weather data",
+    ],
     result:
-      "A class project that exercised product scope, backend APIs, database modeling, and front-end workflows.",
-    technologies: ["MongoDB", "Express.js", "React.js", "Node.js"],
-  },
-  {
-    name: "HabitHub",
-    date: "Dec 16, 2023",
-    label: "Product Design",
-    description:
-      "A dark-mode, minimalist habit tracker concept designed in Figma around calm daily progress.",
-    createdFor: "Showcasing Figma UI/UX design for a minimal application.",
-    problem:
-      "Habit tracking can feel like administrative work instead of a motivating daily ritual.",
-    system:
-      "A focused mobile interface concept for entering, tracking, and celebrating daily habit wins.",
-    engineering: ["Figma", "UI/UX", "Product interaction design"],
-    result:
-      "A cohesive visual direction for a habit tracking product with simple navigation and intentional tone.",
-    technologies: ["Figma"],
+      "Published as a live research interface focused on transparent picks, explainability, and honest measurement rather than promising wins.",
+    technologies: ["React", "Express", "Supabase", "MLB Data", "Odds", "Weather"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/andresbotia/grandSlamBetting",
+      },
+      {
+        label: "Live site",
+        href: "https://grand-slam-insights-client.vercel.app/",
+      },
+    ],
   },
   {
     name: "Photography Portfolio",

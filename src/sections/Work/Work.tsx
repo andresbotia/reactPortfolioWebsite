@@ -1,4 +1,5 @@
 import { ChevronDown, ExternalLink } from "lucide-react";
+import type { CSSProperties } from "react";
 import { useState } from "react";
 import { projects } from "../../data/projects";
 
@@ -32,15 +33,7 @@ function ProjectCase({ project, index }: { project: (typeof projects)[number]; i
     <article className={`project-case ${expanded ? "project-case--expanded" : ""}`}>
       <div className="project-visual" aria-hidden="true">
         <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
-        <div className="mock-window">
-          <div className="mock-topbar" />
-          <div className="mock-route" />
-          <div className="mock-panels">
-            <span />
-            <span />
-            <span />
-          </div>
-        </div>
+        <ProjectVisual project={project} />
       </div>
       <div className="project-content">
         <p className="eyebrow">
@@ -126,5 +119,57 @@ function ProjectCase({ project, index }: { project: (typeof projects)[number]; i
         </div>
       </div>
     </article>
+  );
+}
+
+function ProjectVisual({ project }: { project: (typeof projects)[number] }) {
+  if (project.visual === "yearly-tracker") {
+    return (
+      <div className="app-simulation">
+        <div className="phone-shell">
+          <div className="phone-status">
+            <span>2026</span>
+            <span>72%</span>
+          </div>
+          <div className="app-header">
+            <span>Yearly Tracker</span>
+            <strong>Build consistent systems.</strong>
+          </div>
+          <div className="progress-ring" aria-hidden="true">
+            <span>68%</span>
+          </div>
+          <div className="habit-list">
+            <span style={{ "--fill": "82%" } as CSSProperties}>Ship work</span>
+            <span style={{ "--fill": "64%" } as CSSProperties}>Train</span>
+            <span style={{ "--fill": "48%" } as CSSProperties}>Read</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (project.visual === "grand-slam" && project.image) {
+    return (
+      <div className="site-preview">
+        <div className="preview-bar">
+          <span />
+          <span />
+          <span />
+        </div>
+        <img src={project.image} alt="" loading="lazy" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mock-window">
+      <div className="mock-topbar" />
+      <div className="mock-route" />
+      <div className="mock-panels">
+        <span />
+        <span />
+        <span />
+      </div>
+    </div>
   );
 }
