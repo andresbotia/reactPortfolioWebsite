@@ -7,10 +7,7 @@ type Voxel = {
   y: number;
   distance: number;
   seed: number;
-  colorSeed: number;
   phase: number;
-  pulseSpeed: number;
-  pulseStrength: number;
 };
 
 function hash(value: number) {
@@ -39,10 +36,7 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
         y,
         distance: Math.sqrt(x * x + y * y),
         seed: ((col * 13 + row * 31) % 97) / 97,
-        colorSeed: hash(col * 5.73 + row * 17.19),
         phase: hash(col * 19.31 + row * 7.17) * Math.PI * 2,
-        pulseSpeed: 0.55 + hash(col * 3.91 + row * 11.7) * 1.8,
-        pulseStrength: 0.45 + hash(col * 23.1 + row * 5.43) * 0.55,
       };
     });
   }, [cubeCount, gridSize, spacing]);
@@ -55,32 +49,25 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
     const scrollWave = scrollProgress * Math.PI * 12;
 
     voxels.forEach((voxel, index) => {
-      const wave =
-        Math.sin(voxel.distance * 2.8 - scrollWave + voxel.seed * Math.PI * 2) * 0.5 + 0.5;
-      const ripple =
-        Math.sin((voxel.x * 0.9 + voxel.y * 0.35) * 2.3 + scrollWave * 0.6 + elapsed * 0.45) *
-          0.5 +
-        0.5;
-      const randomPulse =
-        Math.sin(elapsed * voxel.pulseSpeed + voxel.phase + Math.sin(elapsed * 0.21 + voxel.seed * 8)) *
-          0.5 +
-        0.5;
-      const sharpPulse = Math.pow(randomPulse, 4.5) * voxel.pulseStrength;
-      const intensity = Math.min(1, Math.pow(Math.max(wave * 0.62, ripple * 0.48), 2.2) + sharpPulse);
-      const scale = 0.075 + intensity * (isMobile ? 0.15 : 0.2);
-      const driftX = Math.sin(scrollWave * 0.12 + elapsed * 0.08 + voxel.phase) * 0.012;
-      const driftY = Math.cos(scrollWave * 0.1 + elapsed * 0.07 + voxel.phase) * 0.012;
+      const radialPhase = voxel.distance * 3.35 - scrollWave + elapsed * 0.12 + voxel.seed * 0.35;
+      const diagonalPhase = (voxel.x * 0.85 - voxel.y * 0.55) * 2.6 + scrollWave * 0.42;
+      const ripple = Math.pow(Math.max(0, Math.cos(radialPhase)), 2.35);
+      const fill = Math.min(
+        1,
+        ripple * 0.82 + Math.pow(Math.sin(diagonalPhase) * 0.5 + 0.5, 2.4) * 0.18,
+      );
+      const scale = 0.08 + fill * (isMobile ? 0.18 : 0.25);
 
-      dummy.position.set(voxel.x + driftX, voxel.y + driftY, 0);
+      dummy.position.set(voxel.x, voxel.y, 0);
       dummy.rotation.set(0, 0, 0);
       dummy.scale.setScalar(scale);
       dummy.updateMatrix();
       mesh.setMatrixAt(index, dummy.matrix);
 
-      const paletteShift = (scrollProgress * 0.28 + voxel.colorSeed + randomPulse * 0.08) % 1;
-      const hue =
-        paletteShift < 0.36 ? 0.53 : paletteShift < 0.62 ? 0.43 : paletteShift < 0.84 ? 0.58 : 0.71;
-      color.setHSL(hue, 0.62 + intensity * 0.16, 0.16 + intensity * 0.56);
+      const leadingEdge = Math.sin(radialPhase + voxel.phase * 0.08) > 0;
+      const colorMix = Math.sin(diagonalPhase + voxel.phase * 0.12) * 0.5 + 0.5;
+      const hue = leadingEdge ? 0.54 + colorMix * 0.04 : 0.43 + colorMix * 0.28;
+      color.setHSL(hue, 0.58 + fill * 0.18, 0.12 + fill * 0.62);
       mesh.setColorAt(index, color);
     });
 
@@ -91,7 +78,7 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, cubeCount]}>
       <planeGeometry args={[1, 1]} />
-      <meshBasicMaterial vertexColors transparent opacity={0.84} depthWrite={false} />
+      <meshBasicMaterial vertexColors transparent opacity={0.9} depthWrite={false} />
     </instancedMesh>
   );
 }
