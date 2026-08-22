@@ -81,7 +81,6 @@ export const projects: Project[] = [
     name: "Grand Slam Insights",
     label: "Live Full Stack Site",
     visual: "grand-slam",
-    image: "/grand-slam-insights-home.png",
     description:
       "A full-stack MLB prediction dashboard for researching markets, model confidence, public baseball data, odds, weather, and calibration.",
     createdFor:

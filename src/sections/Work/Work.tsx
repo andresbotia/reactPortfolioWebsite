@@ -148,15 +148,42 @@ function ProjectVisual({ project }: { project: (typeof projects)[number] }) {
     );
   }
 
-  if (project.visual === "grand-slam" && project.image) {
+  if (project.visual === "grand-slam") {
     return (
-      <div className="site-preview">
-        <div className="preview-bar">
-          <span />
-          <span />
-          <span />
+      <div className="grand-slam-preview">
+        <div className="grand-slam-sidebar">
+          <strong>Grand Slam Insights</strong>
+          <span>Today</span>
+          <span>Best Bets</span>
+          <span>Matchups</span>
+          <span>History</span>
+          <span>Model Lab</span>
         </div>
-        <img src={project.image} alt="" loading="lazy" />
+        <div className="grand-slam-board">
+          <div className="grand-slam-toolbar">
+            <strong>Today's Card</strong>
+            <span>08/22/2026</span>
+          </div>
+          <div className="grand-slam-kpis">
+            <span>Weekly ML <strong>55.8%</strong></span>
+            <span>Weekly totals <strong>64%</strong></span>
+            <span>Best <strong>64.2%</strong></span>
+          </div>
+          <div className="grand-slam-table">
+            {["Over 7.5", "Houston Astros", "No run 1st", "Over 8"].map((pick) => (
+              <span key={pick}>
+                <strong>{pick}</strong>
+                <em>73% model / pending</em>
+              </span>
+            ))}
+          </div>
+          <div className="grand-slam-chart">
+            <span className="chart-bar chart-bar--one" />
+            <span className="chart-bar chart-bar--two" />
+            <span className="chart-bar chart-bar--three" />
+            <span className="chart-line" />
+          </div>
+        </div>
       </div>
     );
   }
