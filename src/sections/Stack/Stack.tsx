@@ -1,4 +1,4 @@
-import { skillGroups } from "../../data/skills";
+import { capabilityGroups, skillGroups } from "../../data/skills";
 
 export function Stack() {
   return (
@@ -19,6 +19,14 @@ export function Stack() {
                 <span key={item}>{item}</span>
               ))}
             </div>
+          </article>
+        ))}
+      </div>
+      <div className="capability-grid" aria-label="Engineering capabilities">
+        {capabilityGroups.map((capability) => (
+          <article className="capability-item" key={capability.title}>
+            <h3>{capability.title}</h3>
+            <p>{capability.description}</p>
           </article>
         ))}
       </div>

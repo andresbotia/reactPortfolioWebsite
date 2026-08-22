@@ -154,6 +154,7 @@ void main() {
 
 function DitherWaves({ scrollProgress }: DitherWavesProps) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const startTimeRef = useRef(0);
   const pointerTargetRef = useRef(new THREE.Vector2(0.5, 0.5));
   const pointerCurrentRef = useRef(new THREE.Vector2(0.5, 0.5));
   const pointerStrengthRef = useRef(0);
@@ -196,14 +197,15 @@ function DitherWaves({ scrollProgress }: DitherWavesProps) {
     material.uniforms.resolution.value.set(Math.floor(size.width * dpr), Math.floor(size.height * dpr));
   }, [gl, size]);
 
-  useFrame(({ clock }) => {
+  useFrame(() => {
     const material = materialRef.current;
     if (!material) return;
+    if (!startTimeRef.current) startTimeRef.current = performance.now();
 
     pointerCurrentRef.current.lerp(pointerTargetRef.current, 0.08);
     pointerStrengthRef.current *= 0.94;
 
-    material.uniforms.time.value = clock.getElapsedTime();
+    material.uniforms.time.value = (performance.now() - startTimeRef.current) / 1000;
     material.uniforms.pointer.value.copy(pointerCurrentRef.current);
     material.uniforms.pointerStrength.value = pointerStrengthRef.current;
     material.uniforms.scrollProgress.value = scrollProgress;

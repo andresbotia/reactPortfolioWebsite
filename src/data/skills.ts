@@ -25,3 +25,22 @@ export const skillGroups = [
     items: ["Git", "Expo", "Chrome Extensions", "Vite", "Three.js"],
   },
 ];
+
+export const capabilityGroups = [
+  {
+    title: "Interface architecture",
+    description: "React, React Native, TypeScript, component systems, and polished user workflows.",
+  },
+  {
+    title: "Operational integration",
+    description: "APIs, SQL/data movement, automation, and system boundaries where business logic lives.",
+  },
+  {
+    title: "Enterprise modernization",
+    description: "IBM i, RPG, DB2, and pragmatic bridges between legacy platforms and modern interfaces.",
+  },
+  {
+    title: "Product execution",
+    description: "Shipped mobile apps, browser extensions, front-end sites, and case-study-ready delivery.",
+  },
+];

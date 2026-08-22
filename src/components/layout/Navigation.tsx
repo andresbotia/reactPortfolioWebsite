@@ -36,12 +36,28 @@ function LinkedInIcon() {
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("#top");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const sectionIds = ["top", ...navItems.map((item) => item.href.slice(1))];
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+
+      const current = sectionIds.reduce((active, id) => {
+        const section = document.getElementById(id);
+        if (!section) return active;
+        return section.offsetTop <= window.scrollY + 180 ? id : active;
+      }, "top");
+      setActiveSection(`#${current}`);
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return (
@@ -52,7 +68,11 @@ export function Navigation() {
 
       <nav className="desktop-nav" aria-label="Main navigation">
         {navItems.map((item) => (
-          <a key={item.href} href={item.href}>
+          <a
+            key={item.href}
+            href={item.href}
+            aria-current={activeSection === item.href ? "page" : undefined}
+          >
             {item.label}
           </a>
         ))}
@@ -83,7 +103,12 @@ export function Navigation() {
       {open ? (
         <nav className="mobile-nav" aria-label="Mobile navigation">
           {navItems.map((item) => (
-            <a key={item.href} href={item.href} onClick={() => setOpen(false)}>
+            <a
+              key={item.href}
+              href={item.href}
+              aria-current={activeSection === item.href ? "page" : undefined}
+              onClick={() => setOpen(false)}
+            >
               {item.label}
             </a>
           ))}

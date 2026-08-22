@@ -49,6 +49,20 @@ function ProjectCase({ project, index }: { project: (typeof projects)[number]; i
         </p>
         <h3>{project.name}</h3>
         <p>{project.description}</p>
+        <div className="project-brief" aria-label={`${project.name} summary`}>
+          {project.problem ? (
+            <span>
+              <strong>Problem</strong>
+              {project.problem}
+            </span>
+          ) : null}
+          {project.result ? (
+            <span>
+              <strong>Result</strong>
+              {project.result}
+            </span>
+          ) : null}
+        </div>
         <div className="tag-row">
           {project.technologies.map((technology) => (
             <span key={technology}>{technology}</span>
