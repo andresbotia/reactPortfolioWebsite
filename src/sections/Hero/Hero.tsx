@@ -6,15 +6,15 @@ export function Hero() {
   return (
     <section className="hero-section" id="top">
       <div className="hero-content">
-        <p className="eyebrow">Andres Botia / Software engineer / Florida</p>
+        <p className="eyebrow">Software engineer / Florida</p>
         <h1>{profile.headline}</h1>
         <p className="hero-copy">{profile.summary}</p>
         <div className="hero-actions" aria-label="Primary actions">
           <ButtonLink href="#work" variant="primary">
             View My Work <ArrowDown size={18} />
           </ButtonLink>
-          <ButtonLink href="#about" variant="secondary">
-            About Me
+          <ButtonLink href="#experience" variant="secondary">
+            Experience
           </ButtonLink>
           <ButtonLink href={profile.resumePath} variant="ghost">
             <Download size={18} /> Resume

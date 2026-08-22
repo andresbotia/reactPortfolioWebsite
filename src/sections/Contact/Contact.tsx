@@ -28,11 +28,6 @@ export function Contact() {
     <section className="section contact-section" id="contact">
       <div className="contact-panel">
         <p className="section-kicker">Contact</p>
-        <h2>Have something interesting to build?</h2>
-        <p>
-          Reach Andres directly for software engineering work involving modern interfaces, backend
-          systems, APIs, automation, or operational technology.
-        </p>
         <div className="contact-links">
           <a href={`mailto:${profile.email}`}>
             <Mail size={18} /> {profile.email}

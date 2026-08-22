@@ -2,7 +2,7 @@ export const profile = {
   name: "Andres Botia",
   initials: "AB",
   role: "Software engineer",
-  headline: "I build software for systems that actually have to work.",
+  headline: "Andres Botia",
   summary:
     "Software engineer with a computer science background, public front-end portfolio work, and a focus on practical systems across modern interfaces, backend services, APIs, SQL/data, automation, IBM i/RPG environments, aviation technology, and operational software.",
   location: "Deerfield Beach, Florida",

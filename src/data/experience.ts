@@ -1,22 +1,32 @@
 export const experience = [
   {
-    eyebrow: "Current focus",
-    title: "Software engineering across operational systems",
-    organization: "Professional details not listed publicly",
+    eyebrow: "Current role",
+    title: "Software Engineer",
+    organization: "Banyan Air Service",
     date: "Current",
     location: "Florida",
     body:
-      "Andres works across modern React interfaces, backend systems, APIs, SQL/data, automation, IBM i/RPG environments, aviation technology, and business software. Public employer names, exact dates, and metrics were not available in the source material, so they are intentionally omitted.",
-    technologies: ["React", "APIs", "SQL", "Automation", "IBM i", "RPG", "Operational software"],
+      "Current software engineering work in an aviation service environment, focused on practical business software that connects user-facing interfaces with operational systems, data, and workflows.",
+    technologies: ["Business software", "Operational systems", "SQL", "APIs", "Automation"],
   },
   {
-    eyebrow: "Public portfolio foundation",
-    title: "Front-end, product, and full-stack project work",
-    organization: "Personal and academic projects",
-    date: "2020 - 2023",
+    eyebrow: "Public software work",
+    title: "Mobile, full-stack, and browser-extension projects",
+    organization: "Personal projects",
+    date: "2020 - Present",
     location: "Florida",
     body:
-      "Public work includes a Chrome extension, a MERN social application, a Figma product concept, and an early photography portfolio. These projects show UI craft, browser integration, backend learning, and product thinking.",
-    technologies: ["JavaScript", "React", "Node.js", "MongoDB", "Figma", "HTML", "CSS"],
+      "Published and maintained personal software including Yearly Tracker, Grand Slam Insights, a Chrome extension, and earlier front-end portfolio work. These projects show mobile product development, dashboard UI, browser integration, backend services, and front-end craft.",
+    technologies: ["React", "React Native", "Expo", "Express", "Supabase", "Chrome Extension"],
+  },
+  {
+    eyebrow: "Education",
+    title: "Bachelor's degree in Computer Science",
+    organization: "Florida Atlantic University",
+    date: "Completed",
+    location: "Florida",
+    body:
+      "Computer science background supporting work across modern interfaces, backend services, data, automation, and enterprise software environments.",
+    technologies: ["Computer Science", "Software Engineering", "Data", "Systems"],
   },
 ];

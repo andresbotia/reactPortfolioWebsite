@@ -5,10 +5,11 @@ export function Experience() {
     <section className="section experience-section" id="experience">
       <div className="section-kicker">Experience</div>
       <div className="section-heading-row">
-        <h2>Engineering work presented with factual boundaries.</h2>
+        <h2>Software engineering across aviation, enterprise systems, and modern product work.</h2>
         <p>
-          This section is ready for employer-specific entries when Andres provides confirmed roles,
-          companies, dates, and outcomes.
+          Public profile details show current software engineering work at Banyan Air Service, a
+          computer science background from Florida Atlantic University, and shipped personal
+          software across web, mobile, and full-stack systems.
         </p>
       </div>
       <div className="timeline">
@@ -29,21 +30,6 @@ export function Experience() {
             </div>
           </article>
         ))}
-        <article className="timeline-item timeline-item--brief">
-          <p className="eyebrow">Next content pass</p>
-          <h3>Confirmed professional timeline needed</h3>
-          <p>
-            To turn this into a stronger resume-grade section, provide employer names, titles,
-            exact dates, locations, products or systems owned, and outcomes that can be stated
-            without guessing. The layout is ready for those entries.
-          </p>
-          <div className="tag-row">
-            <span>Employers</span>
-            <span>Titles</span>
-            <span>Dates</span>
-            <span>Outcomes</span>
-          </div>
-        </article>
       </div>
     </section>
   );
