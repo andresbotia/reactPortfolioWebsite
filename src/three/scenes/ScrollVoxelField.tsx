@@ -7,6 +7,7 @@ type Voxel = {
   y: number;
   distance: number;
   seed: number;
+  colorSeed: number;
   phase: number;
   pulseSpeed: number;
   pulseStrength: number;
@@ -38,6 +39,7 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
         y,
         distance: Math.sqrt(x * x + y * y),
         seed: ((col * 13 + row * 31) % 97) / 97,
+        colorSeed: hash(col * 5.73 + row * 17.19),
         phase: hash(col * 19.31 + row * 7.17) * Math.PI * 2,
         pulseSpeed: 0.55 + hash(col * 3.91 + row * 11.7) * 1.8,
         pulseStrength: 0.45 + hash(col * 23.1 + row * 5.43) * 0.55,
@@ -65,22 +67,20 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
         0.5;
       const sharpPulse = Math.pow(randomPulse, 4.5) * voxel.pulseStrength;
       const intensity = Math.min(1, Math.pow(Math.max(wave * 0.62, ripple * 0.48), 2.2) + sharpPulse);
-      const z = -2.7 + intensity * 0.92;
-      const scale = 0.07 + intensity * (isMobile ? 0.13 : 0.18);
+      const scale = 0.075 + intensity * (isMobile ? 0.15 : 0.2);
+      const driftX = Math.sin(scrollWave * 0.12 + elapsed * 0.08 + voxel.phase) * 0.012;
+      const driftY = Math.cos(scrollWave * 0.1 + elapsed * 0.07 + voxel.phase) * 0.012;
 
-      dummy.position.set(voxel.x, voxel.y, z);
-      dummy.rotation.set(
-        0.7 + intensity * 0.48 + voxel.seed * 0.16,
-        0.2 + scrollProgress * Math.PI + randomPulse * 0.18,
-        0.18 + voxel.seed * 0.12,
-      );
+      dummy.position.set(voxel.x + driftX, voxel.y + driftY, 0);
+      dummy.rotation.set(0, 0, 0);
       dummy.scale.setScalar(scale);
       dummy.updateMatrix();
       mesh.setMatrixAt(index, dummy.matrix);
 
-      const paletteShift = (scrollProgress + voxel.seed + randomPulse * 0.18 + intensity * 0.2) % 1;
-      const hue = 0.52 + paletteShift * 0.12;
-      color.setHSL(hue, 0.78, 0.2 + intensity * 0.66);
+      const paletteShift = (scrollProgress * 0.28 + voxel.colorSeed + randomPulse * 0.08) % 1;
+      const hue =
+        paletteShift < 0.36 ? 0.53 : paletteShift < 0.62 ? 0.43 : paletteShift < 0.84 ? 0.58 : 0.71;
+      color.setHSL(hue, 0.62 + intensity * 0.16, 0.16 + intensity * 0.56);
       mesh.setColorAt(index, color);
     });
 
@@ -90,8 +90,8 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, cubeCount]}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial vertexColors transparent opacity={0.82} depthWrite={false} />
+      <planeGeometry args={[1, 1]} />
+      <meshBasicMaterial vertexColors transparent opacity={0.84} depthWrite={false} />
     </instancedMesh>
   );
 }
@@ -102,7 +102,7 @@ export default function ScrollVoxelField({ scrollProgress }: { scrollProgress: n
       className="voxel-canvas"
       dpr={[1, 1.35]}
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-      camera={{ position: [0, 0, 4.2], fov: 46 }}
+      camera={{ position: [0, 0, 4.2], fov: 42 }}
     >
       <VoxelGrid scrollProgress={scrollProgress} />
     </Canvas>
