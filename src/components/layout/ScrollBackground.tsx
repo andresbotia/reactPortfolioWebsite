@@ -11,18 +11,10 @@ function getScrollProgress() {
   return Math.min(1, Math.max(0, window.scrollY / max));
 }
 
-function getHeroBlend() {
-  const hero = document.querySelector<HTMLElement>(".hero-section");
-  if (!hero) return 1;
-  const distance = Math.max(1, hero.offsetHeight * 0.72);
-  return Math.min(1, Math.max(0, window.scrollY / distance));
-}
-
 export function ScrollBackground() {
   const reducedMotion = useReducedMotion();
   const webglSupported = useWebGLSupported();
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [heroBlend, setHeroBlend] = useState(0);
 
   useEffect(() => {
     if (reducedMotion || !webglSupported) return;
@@ -30,7 +22,6 @@ export function ScrollBackground() {
     const update = () => {
       frame = 0;
       setScrollProgress(getScrollProgress());
-      setHeroBlend(getHeroBlend());
     };
     const requestUpdate = () => {
       if (!frame) frame = window.requestAnimationFrame(update);
@@ -53,10 +44,6 @@ export function ScrollBackground() {
       style={
         {
           "--scroll": scrollProgress,
-          "--hero-blend": heroBlend,
-          "--pulse-a": `${18 + scrollProgress * 52}%`,
-          "--pulse-b": `${82 - scrollProgress * 46}%`,
-          "--pulse-c": `${38 + scrollProgress * 30}%`,
         } as CSSProperties
       }
       aria-hidden="true"

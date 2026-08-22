@@ -67,39 +67,8 @@ body::before {
 }
 
 .site-dither-background {
-  opacity: calc(var(--hero-blend) * 0.52);
-  mask-image:
-    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, var(--hero-blend)) 18%, black 36%, black 86%, transparent 100%);
-  transition: opacity 120ms linear;
-}
-
-.site-dither-background::before,
-.site-dither-background::after {
-  position: absolute;
-  inset: -12%;
-  content: "";
-  transform: translate3d(calc(var(--scroll) * -18px), calc(var(--scroll) * -120px), 0);
-  transform-origin: center;
-}
-
-.site-dither-background::before {
-  opacity: 0.16;
-  background-image:
-    linear-gradient(90deg, rgba(123, 220, 255, 0.14) 1px, transparent 1px),
-    linear-gradient(rgba(147, 240, 200, 0.08) 1px, transparent 1px);
-  background-size: 48px 48px;
-  background-position:
-    calc(var(--scroll) * -240px) calc(var(--scroll) * 140px),
-    calc(var(--scroll) * 160px) calc(var(--scroll) * -200px);
-}
-
-.site-dither-background::after {
-  opacity: 0.22;
-  background:
-    radial-gradient(circle at var(--pulse-a) 22%, rgba(123, 220, 255, 0.28), transparent 14%),
-    radial-gradient(circle at var(--pulse-b) 58%, rgba(147, 240, 200, 0.22), transparent 12%),
-    radial-gradient(circle at var(--pulse-c) 78%, rgba(76, 157, 255, 0.24), transparent 15%);
-  filter: blur(14px);
+  opacity: 0.52;
+  mask-image: linear-gradient(to bottom, black 0, black 86%, transparent 100%);
 }
 
 .dither-canvas {
@@ -263,29 +232,20 @@ main {
 
 .hero-section {
   position: relative;
-  min-height: 100svh;
+  min-height: auto;
   display: grid;
   align-items: center;
-  padding: 118px 24px 72px;
+  padding: clamp(116px, 14vh, 164px) 24px 64px;
   isolation: isolate;
 }
 
 .hero-section::after {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  z-index: -1;
-  height: 28svh;
-  pointer-events: none;
-  content: "";
-  background: linear-gradient(to bottom, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.72) 58%, var(--bg));
+  display: none;
 }
 
 .hero-content {
   width: min(100%, var(--max));
   margin: 0 auto;
-  padding-top: 8vh;
 }
 
 .eyebrow,
@@ -376,6 +336,10 @@ main {
   width: min(100%, var(--max));
   margin: 0 auto;
   padding: 104px 24px;
+}
+
+.about-section {
+  padding-top: 56px;
 }
 
 .split-layout,
@@ -877,8 +841,7 @@ main {
   }
 
   .hero-section {
-    min-height: 94svh;
-    padding: 94px 18px 56px;
+    padding: 94px 18px 40px;
   }
 
   .hero-content h1 {
@@ -893,6 +856,10 @@ main {
     padding: 76px 18px;
   }
 
+  .about-section {
+    padding-top: 34px;
+  }
+
   .section h2 {
     font-size: clamp(2rem, 12vw, 3.25rem);
   }
@@ -902,7 +869,7 @@ main {
   }
 
   .site-dither-background {
-    opacity: calc(var(--hero-blend) * 0.4);
+    opacity: 0.4;
   }
 
   .case-grid {
