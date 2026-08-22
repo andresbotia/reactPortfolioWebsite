@@ -60,24 +60,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    name: "Twitter Revenue Chrome Extension",
-    date: "Dec 14, 2023",
-    label: "Browser Extension",
-    description:
-      "A Chrome extension that modifies Twitter/X tweet UI to show estimated revenue for individual tweets.",
-    createdFor:
-      "Personal project to learn and experiment with Chrome extension development.",
-    problem:
-      "The native interface surfaces impressions, but not an estimate of what an individual post could represent in ad revenue.",
-    system:
-      "Browser extension UI layer that reads tweet views and replaces the views affordance with a calculated estimate.",
-    engineering: ["Chrome Extension", "JavaScript", "HTML", "UI integration"],
-    result:
-      "Turned a platform metric into a more useful interface experiment without requiring a separate dashboard.",
-    technologies: ["Chrome Extension", "JavaScript", "HTML"],
-    href: "https://chromewebstore.google.com/detail/twitter-estimated-revenue/fognfoiolehcjbakhcmdppjalhapckno",
-  },
-  {
     name: "Grand Slam Insights",
     label: "Live Full Stack Site",
     visual: "grand-slam",
@@ -128,5 +110,23 @@ export const projects: Project[] = [
       "An early web development project connecting visual work with front-end craft.",
     technologies: ["JavaScript", "HTML", "CSS", "SCSS"],
     href: "https://andres-photography-portfolio.netlify.app/",
+  },
+  {
+    name: "Twitter Revenue Chrome Extension",
+    date: "Dec 14, 2023",
+    label: "Browser Extension",
+    description:
+      "A Chrome extension that modifies Twitter/X tweet UI to show estimated revenue for individual tweets.",
+    createdFor:
+      "Personal project to learn and experiment with Chrome extension development.",
+    problem:
+      "The native interface surfaces impressions, but not an estimate of what an individual post could represent in ad revenue.",
+    system:
+      "Browser extension UI layer that reads tweet views and replaces the views affordance with a calculated estimate.",
+    engineering: ["Chrome Extension", "JavaScript", "HTML", "UI integration"],
+    result:
+      "Turned a platform metric into a more useful interface experiment without requiring a separate dashboard.",
+    technologies: ["Chrome Extension", "JavaScript", "HTML"],
+    href: "https://chromewebstore.google.com/detail/twitter-estimated-revenue/fognfoiolehcjbakhcmdppjalhapckno",
   },
 ];
