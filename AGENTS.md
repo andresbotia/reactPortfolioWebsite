@@ -80,3 +80,7 @@ npm run build
 ```
 
 Also verify desktop and mobile behavior, navigation links, WebGL fallback, reduced-motion behavior, and content accuracy.
+
+# Deployment
+
+The project is deployed with Vercel. `vercel.json` declares the Vite framework, `npm run build`, and `dist` output directory. Prefer Git-based deployments from `main` unless Andres explicitly asks for a manual CLI deploy.

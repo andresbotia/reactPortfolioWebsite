@@ -72,4 +72,4 @@ The page uses semantic sections, keyboard-accessible links/buttons, visible focu
 
 ## Deployment
 
-This is a static Vite application intended for deployment at `https://andresbotia.com`. The repository currently has no `.openai/hosting.json`, so no managed hosting project is linked from the workspace. Build output is generated in `dist/`.
+This is a static Vite application intended for deployment on Vercel at `https://andresbotia.com`. `vercel.json` pins the build command to `npm run build` and the output directory to `dist/`.
