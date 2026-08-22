@@ -746,9 +746,15 @@ main {
   background: rgba(255, 255, 255, 0.035);
 }
 
-.grand-slam-preview {
+.grand-slam-carousel {
   position: absolute;
   inset: 44px 24px 28px;
+  perspective: 1100px;
+}
+
+.grand-slam-slide {
+  position: absolute;
+  inset: 0;
   display: grid;
   grid-template-columns: 150px 1fr;
   border: 1px solid rgba(226, 242, 255, 0.28);
@@ -756,7 +762,26 @@ main {
   background: rgba(3, 7, 12, 0.94);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.34);
   overflow: hidden;
-  transform: perspective(1000px) rotateX(6deg) rotateY(-10deg);
+  opacity: 0;
+  transform: rotateX(7deg) rotateY(-11deg) translateX(26px) scale(0.92);
+  transform-origin: center;
+  animation: grand-slam-card-cycle 16s ease-in-out infinite;
+}
+
+.grand-slam-slide--matchups {
+  animation-delay: 0s;
+}
+
+.grand-slam-slide--best-bets {
+  animation-delay: -12s;
+}
+
+.grand-slam-slide--history {
+  animation-delay: -8s;
+}
+
+.grand-slam-slide--model-lab {
+  animation-delay: -4s;
 }
 
 .grand-slam-sidebar {
@@ -782,7 +807,7 @@ main {
   font-weight: 650;
 }
 
-.grand-slam-sidebar span:nth-child(4) {
+.grand-slam-sidebar span.is-active {
   background: rgba(226, 242, 255, 0.13);
   color: var(--text);
 }
@@ -871,6 +896,7 @@ main {
 
 .grand-slam-chart {
   position: relative;
+  min-height: 170px;
   overflow: hidden;
 }
 
@@ -918,10 +944,40 @@ main {
   transform: rotate(-8deg);
 }
 
+@keyframes grand-slam-card-cycle {
+  0%,
+  18% {
+    z-index: 4;
+    opacity: 1;
+    transform: rotateX(6deg) rotateY(-10deg) translateX(0) scale(1);
+  }
+  23%,
+  48% {
+    z-index: 3;
+    opacity: 0.52;
+    transform: rotateX(7deg) rotateY(-11deg) translateX(22px) translateY(12px) scale(0.94);
+  }
+  53%,
+  78% {
+    z-index: 2;
+    opacity: 0.18;
+    transform: rotateX(8deg) rotateY(-12deg) translateX(44px) translateY(24px) scale(0.88);
+  }
+  83%,
+  100% {
+    z-index: 1;
+    opacity: 0;
+    transform: rotateX(8deg) rotateY(-12deg) translateX(60px) translateY(34px) scale(0.84);
+  }
+}
+
 @media (max-width: 620px) {
-  .grand-slam-preview {
-    grid-template-columns: 96px 1fr;
+  .grand-slam-carousel {
     inset: 48px 18px 26px;
+  }
+
+  .grand-slam-slide {
+    grid-template-columns: 96px 1fr;
   }
 
   .grand-slam-sidebar {

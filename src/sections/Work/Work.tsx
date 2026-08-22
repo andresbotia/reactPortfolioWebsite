@@ -150,40 +150,31 @@ function ProjectVisual({ project }: { project: (typeof projects)[number] }) {
 
   if (project.visual === "grand-slam") {
     return (
-      <div className="grand-slam-preview">
-        <div className="grand-slam-sidebar">
-          <strong>Grand Slam Insights</strong>
-          <span>Today</span>
-          <span>Best Bets</span>
-          <span>Matchups</span>
-          <span>History</span>
-          <span>Model Lab</span>
-        </div>
-        <div className="grand-slam-board">
-          <div className="grand-slam-toolbar">
-            <strong>Today's Card</strong>
-            <span>08/22/2026</span>
-          </div>
-          <div className="grand-slam-kpis">
-            <span>Weekly ML <strong>55.8%</strong></span>
-            <span>Weekly totals <strong>64%</strong></span>
-            <span>Best <strong>64.2%</strong></span>
-          </div>
-          <div className="grand-slam-table">
-            {["Over 7.5", "Houston Astros", "No run 1st", "Over 8"].map((pick) => (
-              <span key={pick}>
-                <strong>{pick}</strong>
-                <em>73% model / pending</em>
-              </span>
-            ))}
-          </div>
-          <div className="grand-slam-chart">
-            <span className="chart-bar chart-bar--one" />
-            <span className="chart-bar chart-bar--two" />
-            <span className="chart-bar chart-bar--three" />
-            <span className="chart-line" />
-          </div>
-        </div>
+      <div className="grand-slam-carousel">
+        <GrandSlamSlide
+          title="Matchups"
+          active="Matchups"
+          className="grand-slam-slide--matchups"
+          rows={["Blue Jays at Yankees", "Braves at Brewers", "Nationals at Marlins"]}
+        />
+        <GrandSlamSlide
+          title="Best Bets"
+          active="Best Bets"
+          className="grand-slam-slide--best-bets"
+          rows={["Over 7.5", "Houston Astros", "No run 1st"]}
+        />
+        <GrandSlamSlide
+          title="History"
+          active="History"
+          className="grand-slam-slide--history"
+          chart
+        />
+        <GrandSlamSlide
+          title="Model Lab"
+          active="Model Lab"
+          className="grand-slam-slide--model-lab"
+          chart
+        />
       </div>
     );
   }
@@ -196,6 +187,63 @@ function ProjectVisual({ project }: { project: (typeof projects)[number] }) {
         <span />
         <span />
         <span />
+      </div>
+    </div>
+  );
+}
+
+function GrandSlamSlide({
+  title,
+  active,
+  className,
+  rows = [],
+  chart = false,
+}: {
+  title: string;
+  active: string;
+  className: string;
+  rows?: string[];
+  chart?: boolean;
+}) {
+  const navItems = ["Today", "Best Bets", "Matchups", "History", "Model Lab"];
+
+  return (
+    <div className={`grand-slam-slide ${className}`}>
+      <div className="grand-slam-sidebar">
+        <strong>Grand Slam Insights</strong>
+        {navItems.map((item) => (
+          <span className={item === active ? "is-active" : undefined} key={item}>
+            {item}
+          </span>
+        ))}
+      </div>
+      <div className="grand-slam-board">
+        <div className="grand-slam-toolbar">
+          <strong>{title}</strong>
+          <span>08/22/2026</span>
+        </div>
+        <div className="grand-slam-kpis">
+          <span>Model <strong>73%</strong></span>
+          <span>Conf <strong>87%</strong></span>
+          <span>Data <strong>91</strong></span>
+        </div>
+        {chart ? (
+          <div className="grand-slam-chart">
+            <span className="chart-bar chart-bar--one" />
+            <span className="chart-bar chart-bar--two" />
+            <span className="chart-bar chart-bar--three" />
+            <span className="chart-line" />
+          </div>
+        ) : (
+          <div className="grand-slam-table">
+            {rows.map((pick) => (
+              <span key={pick}>
+                <strong>{pick}</strong>
+                <em>73% model / pending</em>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
