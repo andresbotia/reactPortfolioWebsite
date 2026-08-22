@@ -64,7 +64,7 @@ The site uses isolated WebGL canvases for the hero and scroll-reactive voxel bac
 
 ## GitHub Stats
 
-The GitHub section fetches public GitHub REST API data for `andresbotia` at runtime. The official contributions calendar is not fetched client-side because it requires authenticated GraphQL access; add a server function if contribution history needs to be shown without exposing a token.
+The GitHub section fetches public GitHub REST API data for `andresbotia` through a cached Vercel function at `/api/github-stats`, with a browser-side fallback for local Vite development. The public commit count reflects authored commits in public repositories for the current year; private contribution-calendar totals still require authenticated GraphQL access.
 
 ## Accessibility
 
