@@ -384,6 +384,18 @@ main {
   margin-bottom: 42px;
 }
 
+.section-heading-row > p {
+  align-self: start;
+  padding: 18px 20px;
+  border: 1px solid rgba(226, 242, 255, 0.22);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(123, 220, 255, 0.04), transparent 42%),
+    rgba(5, 9, 15, 0.78);
+  box-shadow: var(--edge-glow);
+  backdrop-filter: blur(14px);
+}
+
 .section-heading-row p,
 .prose {
   font-size: 1.04rem;
