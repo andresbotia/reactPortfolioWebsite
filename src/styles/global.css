@@ -705,225 +705,54 @@ main {
 .grand-slam-carousel {
   position: absolute;
   inset: 44px 24px 28px;
-  perspective: 1100px;
-}
-
-.grand-slam-slide {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: 150px 1fr;
   border: 1px solid rgba(226, 242, 255, 0.28);
   border-radius: var(--radius);
   background: rgba(3, 7, 12, 0.94);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.34);
   overflow: hidden;
-  opacity: 0;
-  transform: rotateX(7deg) rotateY(-11deg) translateX(26px) scale(0.92);
-  transform-origin: center;
-  animation: grand-slam-card-cycle 16s ease-in-out infinite;
 }
 
-.grand-slam-slide--matchups {
-  animation-delay: 0s;
-}
-
-.grand-slam-slide--best-bets {
-  animation-delay: -12s;
-}
-
-.grand-slam-slide--history {
-  animation-delay: -8s;
-}
-
-.grand-slam-slide--model-lab {
-  animation-delay: -4s;
-}
-
-.grand-slam-sidebar {
-  display: grid;
-  align-content: start;
-  gap: 12px;
-  padding: 18px 14px;
-  border-right: 1px solid var(--line);
-  background: rgba(5, 9, 15, 0.72);
-}
-
-.grand-slam-sidebar strong {
-  color: var(--text);
-  font-size: 0.78rem;
-}
-
-.grand-slam-sidebar span {
-  min-height: 26px;
-  padding: 6px 8px;
-  border-radius: 6px;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 650;
-}
-
-.grand-slam-sidebar span.is-active {
-  background: rgba(226, 242, 255, 0.13);
-  color: var(--text);
-}
-
-.grand-slam-board {
-  display: grid;
-  grid-template-rows: auto auto 1fr 92px;
-  gap: 12px;
-  padding: 18px;
-  min-width: 0;
-}
-
-.grand-slam-toolbar,
-.grand-slam-kpis,
-.grand-slam-table span {
+.grand-slam-track {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  width: 400%;
+  height: 100%;
+  animation: grand-slam-image-cycle 24s cubic-bezier(0.7, 0, 0.2, 1) infinite;
 }
 
-.grand-slam-toolbar strong {
-  color: var(--text);
-  font-size: 1.05rem;
-}
-
-.grand-slam-toolbar span {
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 7px 10px;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.72rem;
-}
-
-.grand-slam-kpis {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.grand-slam-kpis span,
-.grand-slam-table span,
-.grand-slam-chart {
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.grand-slam-kpis span {
-  display: grid;
-  gap: 3px;
-  padding: 10px;
-  color: var(--accent);
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  text-transform: uppercase;
-}
-
-.grand-slam-kpis strong {
-  color: var(--text);
-  font-size: 0.82rem;
-}
-
-.grand-slam-table {
-  display: grid;
-  align-content: start;
-  gap: 8px;
-}
-
-.grand-slam-table span {
-  min-height: 46px;
-  padding: 9px 10px;
-}
-
-.grand-slam-table strong {
-  color: var(--text);
-  font-size: 0.78rem;
-}
-
-.grand-slam-table em {
-  color: var(--success);
-  font-style: normal;
-  font-family: var(--mono);
-  font-size: 0.66rem;
-}
-
-.grand-slam-chart {
+.grand-slam-frame {
   position: relative;
-  min-height: 170px;
-  overflow: hidden;
+  flex: 0 0 25%;
+  height: 100%;
+  margin: 0;
 }
 
-.grand-slam-chart::before {
-  position: absolute;
-  inset: 14px;
-  content: "";
-  background-image:
-    linear-gradient(rgba(226, 242, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(226, 242, 255, 0.08) 1px, transparent 1px);
-  background-size: 34px 24px;
+.grand-slam-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
 }
 
-.chart-bar {
-  position: absolute;
-  bottom: 16px;
-  width: 18%;
-  border-radius: 4px 4px 0 0;
-  background: rgba(39, 197, 104, 0.9);
-}
-
-.chart-bar--one {
-  left: 14%;
-  height: 48%;
-}
-
-.chart-bar--two {
-  left: 42%;
-  height: 68%;
-}
-
-.chart-bar--three {
-  left: 70%;
-  height: 58%;
-}
-
-.chart-line {
-  position: absolute;
-  right: 10%;
-  bottom: 22px;
-  left: 10%;
-  height: 58px;
-  border-top: 2px solid rgba(245, 158, 11, 0.9);
-  border-radius: 50%;
-  transform: rotate(-8deg);
-}
-
-@keyframes grand-slam-card-cycle {
+@keyframes grand-slam-image-cycle {
   0%,
-  18% {
-    z-index: 4;
-    opacity: 1;
-    transform: rotateX(6deg) rotateY(-10deg) translateX(0) scale(1);
+  20% {
+    transform: translateX(0);
   }
-  23%,
-  48% {
-    z-index: 3;
-    opacity: 0.52;
-    transform: rotateX(7deg) rotateY(-11deg) translateX(22px) translateY(12px) scale(0.94);
+  25%,
+  45% {
+    transform: translateX(-25%);
   }
-  53%,
-  78% {
-    z-index: 2;
-    opacity: 0.18;
-    transform: rotateX(8deg) rotateY(-12deg) translateX(44px) translateY(24px) scale(0.88);
+  50%,
+  70% {
+    transform: translateX(-50%);
   }
-  83%,
+  75%,
+  95% {
+    transform: translateX(-75%);
+  }
   100% {
-    z-index: 1;
-    opacity: 0;
-    transform: rotateX(8deg) rotateY(-12deg) translateX(60px) translateY(34px) scale(0.84);
+    transform: translateX(0);
   }
 }
 
@@ -981,29 +810,8 @@ main {
     inset: 48px 18px 26px;
   }
 
-  .grand-slam-slide {
-    grid-template-columns: 96px 1fr;
-  }
-
-  .grand-slam-sidebar {
-    padding: 14px 10px;
-  }
-
-  .grand-slam-sidebar span {
-    font-size: 0.62rem;
-  }
-
-  .grand-slam-board {
-    gap: 8px;
-    padding: 12px;
-  }
-
-  .grand-slam-kpis {
-    grid-template-columns: 1fr;
-  }
-
-  .grand-slam-chart {
-    display: none;
+  .grand-slam-frame img {
+    object-position: center top;
   }
 }
 
