@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { profile } from "../../data/profile";
 
 const navItems = [
-  { label: "Experience", href: "#experience" },
   { label: "Work", href: "#work" },
+  { label: "Experience", href: "#experience" },
   { label: "GitHub", href: "#github" },
   { label: "Stack", href: "#stack" },
   { label: "Contact", href: "#contact" },

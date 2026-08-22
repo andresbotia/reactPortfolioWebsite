@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { experience } from "../../data/experience";
 
 export function Experience() {
@@ -9,23 +10,66 @@ export function Experience() {
       </div>
       <div className="timeline">
         {experience.map((item) => (
-          <article className="timeline-item" key={item.title}>
-            <p className="eyebrow">{item.eyebrow}</p>
-            <h3>{item.title}</h3>
-            <div className="timeline-meta">
-              <span>{item.organization}</span>
-              <span>{item.date}</span>
-              <span>{item.location}</span>
-            </div>
-            <p>{item.body}</p>
-            <div className="tag-row">
-              {item.technologies.map((technology) => (
-                <span key={technology}>{technology}</span>
-              ))}
-            </div>
-          </article>
+          <ExperienceCompany item={item} key={item.company} />
         ))}
       </div>
     </section>
+  );
+}
+
+function ExperienceCompany({ item }: { item: (typeof experience)[number] }) {
+  const [activeRoleIndex, setActiveRoleIndex] = useState(0);
+  const activeRole = item.roles[activeRoleIndex];
+
+  return (
+    <article className="timeline-item">
+      <div className="experience-company-header">
+        <div>
+          <p className="eyebrow">{item.eyebrow}</p>
+          <h3>{activeRole.title}</h3>
+        </div>
+        {item.roles.length > 1 ? (
+          <div className="experience-role-tabs" aria-label={`${item.company} roles`}>
+            {item.roles.map((role, index) => (
+              <button
+                className={index === activeRoleIndex ? "is-active" : undefined}
+                type="button"
+                aria-pressed={index === activeRoleIndex}
+                key={role.title}
+                onClick={() => setActiveRoleIndex(index)}
+              >
+                {role.title}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+      <div className="timeline-meta">
+        <span>{item.company}</span>
+        <span>{activeRole.date}</span>
+        <span>{activeRole.location}</span>
+      </div>
+      <p>{activeRole.body}</p>
+      <div className="tag-row">
+        {activeRole.technologies.map((technology) => (
+          <span key={technology}>{technology}</span>
+        ))}
+      </div>
+      {item.roles.length > 1 ? (
+        <div className="experience-role-history">
+          {item.roles.map((role, index) => (
+            <button
+              className={index === activeRoleIndex ? "is-active" : undefined}
+              type="button"
+              key={role.title}
+              onClick={() => setActiveRoleIndex(index)}
+            >
+              <strong>{role.title}</strong>
+              <span>{role.date}</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </article>
   );
 }

@@ -16,8 +16,8 @@ export default function App() {
       <Navigation />
       <main>
         <Hero />
-        <Experience />
         <Work />
+        <Experience />
         <GitHubStats />
         <Stack />
         <Contact />
