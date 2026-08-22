@@ -1,4 +1,4 @@
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { projects } from "../../data/projects";
 
@@ -11,10 +11,10 @@ const yearlyTrackerShots = [
 ];
 
 const grandSlamShots = [
-  "/grand-slam-matchups.png",
-  "/grand-slam-best-bets.png",
-  "/grand-slam-history.png",
-  "/grand-slam-model-lab.png",
+  { src: "/grand-slam-matchups.png", label: "Matchups" },
+  { src: "/grand-slam-best-bets.png", label: "Best Bets" },
+  { src: "/grand-slam-history.png", label: "History" },
+  { src: "/grand-slam-model-lab.png", label: "Model Lab" },
 ];
 
 export function Work() {
@@ -45,7 +45,7 @@ function ProjectCase({ project, index }: { project: (typeof projects)[number]; i
 
   return (
     <article className={`project-case ${expanded ? "project-case--expanded" : ""}`}>
-      <div className="project-visual" aria-hidden="true">
+      <div className="project-visual">
         <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
         <ProjectVisual project={project} />
       </div>
@@ -139,28 +139,26 @@ function ProjectCase({ project, index }: { project: (typeof projects)[number]; i
 function ProjectVisual({ project }: { project: (typeof projects)[number] }) {
   if (project.visual === "yearly-tracker") {
     return (
-      <div className="yearly-tracker-carousel">
-        {yearlyTrackerShots.map((shot, index) => (
-          <figure className={`yearly-tracker-shot yearly-tracker-shot--${index + 1}`} key={shot.src}>
-            <img src={shot.src} alt="" loading="lazy" decoding="async" />
-            <figcaption>{shot.label}</figcaption>
-          </figure>
-        ))}
-      </div>
+      <PreviewCarousel
+        className="yearly-tracker-carousel"
+        frameClassName="yearly-tracker-shot"
+        imageClassName="yearly-tracker-image"
+        label="Yearly Tracker preview images"
+        shots={yearlyTrackerShots}
+        showCaptions
+      />
     );
   }
 
   if (project.visual === "grand-slam") {
     return (
-      <div className="grand-slam-carousel">
-        <div className="grand-slam-track">
-          {grandSlamShots.map((src) => (
-            <figure className="grand-slam-frame" key={src}>
-              <img src={src} alt="" loading="lazy" decoding="async" />
-            </figure>
-          ))}
-        </div>
-      </div>
+      <PreviewCarousel
+        className="grand-slam-carousel"
+        frameClassName="grand-slam-frame"
+        imageClassName="grand-slam-image"
+        label="Grand Slam Insights preview images"
+        shots={grandSlamShots}
+      />
     );
   }
 
@@ -173,6 +171,89 @@ function ProjectVisual({ project }: { project: (typeof projects)[number] }) {
         <span />
         <span />
       </div>
+    </div>
+  );
+}
+
+function PreviewCarousel({
+  className,
+  frameClassName,
+  imageClassName,
+  label,
+  shots,
+  showCaptions = false,
+}: {
+  className: string;
+  frameClassName: string;
+  imageClassName: string;
+  label: string;
+  shots: { src: string; label: string }[];
+  showCaptions?: boolean;
+}) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const lastIndex = shots.length - 1;
+  const activeShot = shots[activeIndex];
+
+  function showPrevious() {
+    setActiveIndex((index) => (index === 0 ? lastIndex : index - 1));
+  }
+
+  function showNext() {
+    setActiveIndex((index) => (index === lastIndex ? 0 : index + 1));
+  }
+
+  return (
+    <div className={`preview-carousel ${className}`} aria-label={label} role="group">
+      <div className="preview-carousel-viewport">
+        <div
+          className="preview-carousel-track"
+          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+        >
+          {shots.map((shot) => (
+            <figure className={`preview-carousel-frame ${frameClassName}`} key={shot.src}>
+              <img
+                className={imageClassName}
+                src={shot.src}
+                alt={`${shot.label} preview`}
+                loading="lazy"
+                decoding="async"
+              />
+              {showCaptions ? <figcaption>{shot.label}</figcaption> : null}
+            </figure>
+          ))}
+        </div>
+      </div>
+      <button
+        className="preview-carousel-button preview-carousel-button--previous"
+        type="button"
+        aria-label={`Show previous ${label}`}
+        onClick={showPrevious}
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <button
+        className="preview-carousel-button preview-carousel-button--next"
+        type="button"
+        aria-label={`Show next ${label}`}
+        onClick={showNext}
+      >
+        <ChevronRight size={16} />
+      </button>
+      <div className="preview-carousel-dots" aria-label={`${label} slides`}>
+        {shots.map((shot, index) => (
+          <button
+            className={index === activeIndex ? "is-active" : undefined}
+            type="button"
+            aria-label={`Show ${shot.label}`}
+            aria-current={index === activeIndex ? "true" : undefined}
+            key={shot.src}
+            onClick={() => setActiveIndex(index)}
+          />
+        ))}
+      </div>
+      <span className="sr-only">
+        Showing {activeShot.label}, image {activeIndex + 1} of {shots.length}
+      </span>
     </div>
   );
 }
