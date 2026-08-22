@@ -7,7 +7,14 @@ type Voxel = {
   y: number;
   distance: number;
   seed: number;
+  phase: number;
+  pulseSpeed: number;
+  pulseStrength: number;
 };
+
+function hash(value: number) {
+  return Math.abs(Math.sin(value * 12.9898) * 43758.5453) % 1;
+}
 
 function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -31,6 +38,9 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
         y,
         distance: Math.sqrt(x * x + y * y),
         seed: ((col * 13 + row * 31) % 97) / 97,
+        phase: hash(col * 19.31 + row * 7.17) * Math.PI * 2,
+        pulseSpeed: 0.55 + hash(col * 3.91 + row * 11.7) * 1.8,
+        pulseStrength: 0.45 + hash(col * 23.1 + row * 5.43) * 0.55,
       };
     });
   }, [cubeCount, gridSize, spacing]);
@@ -49,19 +59,28 @@ function VoxelGrid({ scrollProgress }: { scrollProgress: number }) {
         Math.sin((voxel.x * 0.9 + voxel.y * 0.35) * 2.3 + scrollWave * 0.6 + elapsed * 0.45) *
           0.5 +
         0.5;
-      const intensity = Math.pow(Math.max(wave, ripple * 0.72), 2.8);
-      const z = -2.6 + intensity * 0.72;
-      const scale = 0.085 + intensity * (isMobile ? 0.115 : 0.16);
+      const randomPulse =
+        Math.sin(elapsed * voxel.pulseSpeed + voxel.phase + Math.sin(elapsed * 0.21 + voxel.seed * 8)) *
+          0.5 +
+        0.5;
+      const sharpPulse = Math.pow(randomPulse, 4.5) * voxel.pulseStrength;
+      const intensity = Math.min(1, Math.pow(Math.max(wave * 0.62, ripple * 0.48), 2.2) + sharpPulse);
+      const z = -2.7 + intensity * 0.92;
+      const scale = 0.07 + intensity * (isMobile ? 0.13 : 0.18);
 
       dummy.position.set(voxel.x, voxel.y, z);
-      dummy.rotation.set(0.7 + intensity * 0.4, 0.2 + scrollProgress * Math.PI, 0.18);
+      dummy.rotation.set(
+        0.7 + intensity * 0.48 + voxel.seed * 0.16,
+        0.2 + scrollProgress * Math.PI + randomPulse * 0.18,
+        0.18 + voxel.seed * 0.12,
+      );
       dummy.scale.setScalar(scale);
       dummy.updateMatrix();
       mesh.setMatrixAt(index, dummy.matrix);
 
-      const paletteShift = (scrollProgress + voxel.seed + intensity * 0.2) % 1;
+      const paletteShift = (scrollProgress + voxel.seed + randomPulse * 0.18 + intensity * 0.2) % 1;
       const hue = 0.52 + paletteShift * 0.12;
-      color.setHSL(hue, 0.74, 0.28 + intensity * 0.58);
+      color.setHSL(hue, 0.78, 0.2 + intensity * 0.66);
       mesh.setColorAt(index, color);
     });
 

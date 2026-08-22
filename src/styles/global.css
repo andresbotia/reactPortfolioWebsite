@@ -67,9 +67,11 @@ body::before {
 }
 
 .scroll-voxel-background {
-  opacity: 0.72;
+  opacity: calc(0.12 + (var(--hero-blend) * 0.6));
   mix-blend-mode: screen;
-  mask-image: linear-gradient(to bottom, transparent 0, black 18%, black 82%, transparent 100%);
+  mask-image:
+    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, var(--hero-blend)) 18%, black 42%, black 82%, transparent 100%);
+  transition: opacity 120ms linear;
 }
 
 .scroll-voxel-background::before,
@@ -257,10 +259,23 @@ main {
   isolation: isolate;
 }
 
+.hero-section::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  z-index: -1;
+  height: 28svh;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(to bottom, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.72) 58%, var(--bg));
+}
+
 .hero-visual {
   position: absolute;
   inset: 0;
   z-index: -1;
+  mask-image: linear-gradient(to bottom, black 0 62%, rgba(0, 0, 0, 0.72) 78%, transparent 100%);
 }
 
 .hero-canvas,
@@ -954,7 +969,7 @@ main {
   }
 
   .scroll-voxel-background {
-    opacity: 0.42;
+    opacity: calc(0.08 + (var(--hero-blend) * 0.48));
   }
 
   .case-grid {
