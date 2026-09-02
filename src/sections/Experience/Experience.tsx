@@ -1,58 +1,95 @@
-import { useState } from "react";
-import { experience } from "../../data/experience";
+import type { CSSProperties } from "react";
+import {
+  BUILD_MONTH,
+  formatMonth,
+  longestSpan,
+  span,
+  tenures,
+} from "../../data/experience";
+import "./Experience.css";
 
-export function Experience() {
+function Dates({ start, end }: { start: string; end: string | null }) {
   return (
-    <section className="section experience-section" id="experience">
-      <div className="section-kicker">Experience</div>
-      <div className="section-heading-row">
-        <h2>Software engineering experience.</h2>
-      </div>
-      <div className="timeline">
-        {experience.map((item) => (
-          <ExperienceCompany item={item} key={item.company} />
-        ))}
-      </div>
-    </section>
+    <span className="dates">
+      <time dateTime={start}>{formatMonth(start)}</time>
+      <span aria-hidden="true"> – </span>
+      {end ? (
+        <time dateTime={end}>{formatMonth(end)}</time>
+      ) : (
+        <span>present</span>
+      )}
+    </span>
   );
 }
 
-function ExperienceCompany({ item }: { item: (typeof experience)[number] }) {
-  const [activeRoleIndex, setActiveRoleIndex] = useState(0);
-  const activeRole = item.roles[activeRoleIndex];
+export function Experience() {
+  const longest = longestSpan(BUILD_MONTH);
 
   return (
-    <article className="timeline-item">
-      <div className="experience-company-header">
-        <div>
-          <p className="eyebrow">{item.eyebrow}</p>
-          <h3>{activeRole.title}</h3>
-        </div>
-        {item.roles.length > 1 ? (
-          <div className="experience-role-tabs" aria-label={`${item.company} roles`}>
-            {item.roles.map((role, index) => (
-              <button
-                className={index === activeRoleIndex ? "is-active" : undefined}
-                type="button"
-                aria-pressed={index === activeRoleIndex}
-                key={role.title}
-                onClick={() => setActiveRoleIndex(index)}
-              >
-                {role.title}
-              </button>
-            ))}
+    <section className="band" id="experience" aria-labelledby="experience-heading">
+      <div className="band-inner">
+        <div className="band-row">
+          <div className="band-rail">
+            <span className="rail-note">Experience</span>
           </div>
-        ) : null}
+          <div className="band-body">
+            <h2 className="band-title" id="experience-heading">
+              Legacy on one side, React on the other
+            </h2>
+          </div>
+        </div>
+
+        {tenures.map((tenure) => {
+          const months = span(tenure, BUILD_MONTH);
+          return (
+            <article className="band-row tenure" key={tenure.company}>
+              <div className="band-rail">
+                <span className="rail-value">
+                  <Dates start={tenure.start} end={tenure.end} />
+                </span>
+                {/*
+                  Duration drawn to a shared scale. The date range beside it
+                  already states the same fact in words, so the bar is redundant
+                  for a screen reader and hidden from it — but it is what lets a
+                  sighted reader see the shape of five years at a glance.
+                */}
+                <span
+                  className="span-bar"
+                  aria-hidden="true"
+                  style={{ "--fill": months / longest } as CSSProperties}
+                />
+                <span className="rail-note">{tenure.location}</span>
+              </div>
+
+              <div className="band-body">
+                <h3 className="tenure-company">{tenure.company}</h3>
+
+                <ol className="roles">
+                  {tenure.roles.map((role) => (
+                    <li key={role.title}>
+                      <span className="role-title">{role.title}</span>
+                      <span className="role-dates">
+                        <Dates start={role.start} end={role.end} />
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+
+                <p className="band-text tenure-body">{tenure.body}</p>
+
+                {tenure.highlight ? (
+                  <div className="highlight">
+                    <h4 className="highlight-name">{tenure.highlight.name}</h4>
+                    <p className="band-text">{tenure.highlight.body}</p>
+                  </div>
+                ) : null}
+
+                <p className="case-stack">{tenure.stack.join(", ")}</p>
+              </div>
+            </article>
+          );
+        })}
       </div>
-      <div className="timeline-meta">
-        <span>{item.location}</span>
-      </div>
-      <p>{activeRole.body}</p>
-      <div className="tag-row">
-        {activeRole.technologies.map((technology) => (
-          <span key={technology}>{technology}</span>
-        ))}
-      </div>
-    </article>
+    </section>
   );
 }

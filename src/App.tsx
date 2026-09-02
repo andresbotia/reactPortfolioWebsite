@@ -4,7 +4,6 @@ import { Contact } from "./sections/Contact/Contact";
 import { Experience } from "./sections/Experience/Experience";
 import { GitHubStats } from "./sections/GitHub/GitHubStats";
 import { Hero } from "./sections/Hero/Hero";
-import { Stack } from "./sections/Stack/Stack";
 import { Work } from "./sections/Work/Work";
 import "./styles/global.css";
 
@@ -17,7 +16,6 @@ export default function App() {
         <Work />
         <Experience />
         <GitHubStats />
-        <Stack />
         <Contact />
       </main>
       <Footer />
