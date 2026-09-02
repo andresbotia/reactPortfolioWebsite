@@ -1,4 +1,5 @@
 import { profile } from "../../data/profile";
+import { GlyphField } from "./GlyphField";
 import "./Hero.css";
 
 export function Hero() {
@@ -19,11 +20,15 @@ export function Hero() {
         </div>
 
         {/*
-          The glyph field mounts into this column client-side. It stays empty in
-          the server HTML on purpose: it is decoration, the name is the content,
-          and reserving the box here means the canvas can never shift the page.
+          The canvas element itself is static markup, so the server and client
+          render it identically and there is nothing for hydration to disagree
+          about. Everything that touches a browser API — the atlas, the rAF
+          loop, matchMedia — happens inside an effect. The box is sized by CSS,
+          so the field can never shift the page.
         */}
-        <div className="hero__field" aria-hidden="true" />
+        <div className="hero__field" aria-hidden="true">
+          <GlyphField />
+        </div>
       </div>
     </section>
   );

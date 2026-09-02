@@ -110,6 +110,24 @@
   max-width: 20rem;
 }
 
+/*
+ * The one orchestrated moment on the page: the field fades up from black once
+ * the atlas is built. The h1 does not participate — it is present at frame one
+ * because it is the LCP element. Under reduced motion --dur-field-in is 0ms, so
+ * the static frame simply appears.
+ */
+.hero__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--dur-field-in) var(--ease);
+}
+
+.hero__canvas.is-ready {
+  opacity: 1;
+}
+
 @media (min-width: 900px) {
   .hero__inner {
     grid-template-columns: minmax(0, 30rem) minmax(0, 1fr);
@@ -123,9 +141,9 @@
   .hero__field {
     width: auto;
     max-width: none;
-    height: min(30rem, 58vh);
+    height: min(36rem, 64vh);
     /* Bleeds past the frame edge; .hero clips it. */
-    margin-right: -8vw;
+    margin-right: -10vw;
     margin-left: auto;
   }
 }
