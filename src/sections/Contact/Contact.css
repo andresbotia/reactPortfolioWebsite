@@ -1,0 +1,79 @@
+/*
+ * Contact — one line, an address, three links. No panel, no card, no gradient.
+ */
+
+.contact-address {
+  /* The address is longer than a heading and must never overflow at 320px. */
+  font-size: clamp(1.35rem, 5.2vw, 2.75rem);
+  overflow-wrap: anywhere;
+}
+
+.contact-mail {
+  position: relative;
+  color: inherit;
+}
+
+.contact-mail::after {
+  position: absolute;
+  bottom: 0.02em;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transition: width var(--dur-underline) var(--ease);
+}
+
+.contact-mail:hover::after,
+.contact-mail:focus-visible::after {
+  width: 100%;
+}
+
+.contact-mail:focus-visible,
+.contact-tel:focus-visible {
+  outline: 2px solid var(--instrument);
+  outline-offset: 4px;
+}
+
+.contact-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+  color: var(--read);
+  font-size: var(--size-body);
+}
+
+/* A drawn rule rather than a middle dot: it separates without pretending to be
+   punctuation. */
+.contact-sep {
+  width: 1.25rem;
+  height: 1px;
+  background: var(--rule);
+}
+
+.contact-tel {
+  color: var(--read);
+  font-family: var(--mono);
+  font-size: var(--size-value);
+  font-variant-numeric: tabular-nums;
+}
+
+.contact-tel:hover {
+  color: var(--signal);
+}
+
+.contact-links {
+  margin-top: 1.8rem;
+}
+
+.site-footer {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gutter) 3.5rem;
+  border-top: 1px solid var(--rule-soft);
+  color: var(--rule);
+  font-size: var(--size-micro);
+}
