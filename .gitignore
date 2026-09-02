@@ -26,3 +26,5 @@ dist-ssr
 # local scratch screenshots
 tmp-*.png
 .tmp-*
+
+dist-ssr
