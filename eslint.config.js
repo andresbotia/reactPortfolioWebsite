@@ -38,6 +38,12 @@ export default tseslint.config(
         Buffer: "readonly",
         console: "readonly",
         process: "readonly",
+        /* page.evaluate callbacks are written here but execute in the browser. */
+        document: "readonly",
+        Image: "readonly",
+        performance: "readonly",
+        requestAnimationFrame: "readonly",
+        window: "readonly",
       },
     },
   },
