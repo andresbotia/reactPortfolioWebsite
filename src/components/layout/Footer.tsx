@@ -12,7 +12,7 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <p>
-        {profile.name} — {year}
+        {profile.name}, {year}
       </p>
     </footer>
   );

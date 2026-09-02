@@ -4,7 +4,7 @@ Design plan and agreed decisions for the andresbotia.com rebuild. Written before
 production code exists, as the durable record of what was agreed.
 
 **Status:** built and shipped. Pass 2 complete — see §11 for measured results and §12 for
-the two items that remain in Andres's hands. §13 records a later round of tweaks.
+the two items that remain in Andres's hands. §13 and §14 record later rounds of tweaks.
 
 ---
 
@@ -786,3 +786,74 @@ Measured directly in a real browser across the whole load including the decode, 
 0.00033 — the residue is the last word's box switching from an inline-block ghost back to a
 plain text node. Lighthouse reports 0. Both numbers are recorded rather than picking the
 flattering one; it is 0.3% of the 0.1 budget either way.
+
+
+---
+
+## 14. Copy audit
+
+Copy only. No design, layout or animation changed in this pass.
+
+### 14.1 Banyan framing
+
+The old wording made initiative sound like a complaint about the employer. "Work nobody
+assigned" implies work was lying around neglected, and "built unprompted" implies nobody
+directs anything. The fact worth keeping is self-direction, and it now reads that way.
+
+**Tenure body**
+
+> before: The engineer role added scope and ownership **— including work nobody assigned.**
+> after:  The engineer role expanded that into full ownership, **including proposing and building the Executive Dashboard.**
+
+Naming the dashboard here does two jobs at once: it removes the implication, and it ties the
+initiative directly to the ownership through-line instead of leaving it as a loose fragment.
+"Proposing" carries the initiative without any suggestion that the work was going unclaimed.
+
+**Dashboard body**
+
+> before: **Built unprompted.** It pulls live FlightAware data, cross-references it against reservations and fueling records, and surfaces the financials **—** including flights that never came through.
+> after:  **Self-started.** It pulls live FlightAware data, cross-references it against reservations and fueling records, and surfaces the financials**,** including flights that never came through.
+
+Same fact, stated as a strength. Everything after the first sentence is unchanged: FlightAware,
+reservations, fueling, financials, the hand reconciliation, daily executive use. Nothing invented.
+
+### 14.2 Em dashes
+
+Five in total across all visible copy. Three changed, one was already being rewritten above,
+one kept.
+
+| where | before | after | why |
+|---|---|---|---|
+| Banyan tenure | `ownership — including…` | rewritten (§14.1) | Dash was carrying an aside that shouldn't have been an aside. |
+| Dashboard | `financials — including…` | `financials, including…` | Plain apposition. A comma is what this actually is. |
+| Yearly Tracker | `no analytics — everything stays on the device.` | `Everything stays on the device: no account, no sync, no analytics.` | The dash was announcing a summary. Inverting the clause lets a colon do that job properly, and puts the claim before the list. |
+| Footer | `Andres Botia — 2026` | `Andres Botia, 2026` | Decorative. A byline separator earns nothing from an em dash. |
+| `<title>` | `Andres Botia — Software Engineer` | **kept** | A page title separator is one of the few places an editor genuinely reaches for an em dash. The alternatives are worse: `\|` reads as SEO boilerplate and a middle dot is on the banned list. |
+
+Verified against the built HTML: zero em dashes remain in rendered body text.
+
+### 14.3 Other patterns — checked, nothing to change
+
+- **"X. Not Y. Z."** — grepped for it. Not present anywhere.
+- **Stacked compound descriptors.** The three project summaries are noun phrases, which is
+  idiomatic for a project tagline and consistent across all three, but none stacks adjectives:
+  "Real-time visualisation of…", "An offline-first app for…", "A baseball prediction dashboard
+  that…". One modifier each. Left alone; converting all three to full sentences would be a
+  voice change, not a copy fix.
+- **Filler.** Scanned for seamless, robust, cutting-edge, leverage, passionate, bringing to
+  life, crafting, delve, elevate, empower, streamline, holistic, synergy. One hit, in a code
+  comment ("highest-leverage change for name queries"), which is not visible copy. Nothing in
+  the rendered site.
+
+### 14.4 Dead copy removed
+
+Four fields in `src/data/profile.ts` were rendered nowhere and had survived the rebuild:
+
+- `summary` — "Full-stack engineer with a focus on practical systems across modern interfaces,
+  APIs, SQL/data, automation, IBM i/RPG environments, aviation technology, and operational
+  software." A seven-item pile-up, and exactly the register this audit exists to remove.
+- `facts` — including "Experience direction spans modern and legacy system boundaries", which
+  does not mean anything.
+- `headline`, `initials` — superseded by `name` and by dropping the old circular brand mark.
+
+Deleting them removes the risk of that wording being reintroduced by being reached for later.

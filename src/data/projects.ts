@@ -92,7 +92,7 @@ export const projects: Project[] = [
     year: "2026",
     status: "iOS and Android",
     summary:
-      "An offline-first app for yearly goals and daily habits. No account, no sync, no analytics — everything stays on the device.",
+      "An offline-first app for yearly goals and daily habits. Everything stays on the device: no account, no sync, no analytics.",
     stack: ["React Native", "Expo", "TypeScript"],
     links: [
       {

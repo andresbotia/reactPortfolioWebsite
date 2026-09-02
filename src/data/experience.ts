@@ -50,10 +50,10 @@ export const tenures: Tenure[] = [
       { title: "Software Engineer", start: "2025-02", end: null },
       { title: "Software Developer Apprentice", start: "2024-02", end: "2025-02" },
     ],
-    body: "Backend business systems in RPG ILE IV on IBM i, and the React and React Native tools that sit on top of them. The apprenticeship covered that ground under direction. The engineer role added scope and ownership — including work nobody assigned.",
+    body: "Backend business systems in RPG ILE IV on IBM i, and the React and React Native tools that sit on top of them. The apprenticeship covered that ground under direction. The engineer role expanded that into full ownership, including proposing and building the Executive Dashboard.",
     highlight: {
       name: "Banyan Executive Dashboard",
-      body: "Built unprompted. It pulls live FlightAware data, cross-references it against reservations and fueling records, and surfaces the financials — including flights that never came through. That reconciliation used to be done by hand. The executive team uses it daily.",
+      body: "Self-started. It pulls live FlightAware data, cross-references it against reservations and fueling records, and surfaces the financials, including flights that never came through. That reconciliation used to be done by hand. The executive team uses it daily.",
     },
     stack: ["RPG ILE IV", "IBM i", "DB2", "React", "React Native", "Expo"],
   },
