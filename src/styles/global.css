@@ -16,7 +16,9 @@ html {
 }
 
 body {
-  min-width: 320px;
+  /* No min-width. The old value was 320px, which at a 320px viewport with a
+     classic 15px scrollbar forced the body wider than the visible area and
+     produced real horizontal scroll. The layout is fluid well below that. */
   margin: 0;
   background: var(--ground);
   color: var(--read);

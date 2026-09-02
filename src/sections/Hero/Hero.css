@@ -108,6 +108,14 @@
   aspect-ratio: 1 / 1;
   width: 100%;
   max-width: 20rem;
+  /*
+   * Required, not cosmetic. `width: 100%` with a smaller `max-width` means the
+   * item cannot fill its grid area, and a grid item that cannot stretch falls
+   * back to `start` — which parked the field flush left and left all 15px of
+   * slack on the right at 390px. Centring it is the alignment the constrained
+   * box actually needs; a margin patch would only have hidden it at one width.
+   */
+  justify-self: center;
 }
 
 /*
@@ -142,7 +150,11 @@
     width: auto;
     max-width: none;
     height: min(36rem, 64vh);
-    /* Bleeds past the frame edge; .hero clips it. */
+    /* Deliberately not centred here: the desktop composition is asymmetric and
+       the field bleeds past the frame edge, which .hero clips. The auto left
+       margin does that, and auto margins win over justify-self in grid, but it
+       is reset explicitly so the two rules are not silently competing. */
+    justify-self: end;
     margin-right: -10vw;
     margin-left: auto;
   }
