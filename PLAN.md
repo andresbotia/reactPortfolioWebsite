@@ -3,8 +3,8 @@
 Design plan and agreed decisions for the andresbotia.com rebuild. Written before any
 production code exists, as the durable record of what was agreed.
 
-**Status:** plan complete. All design and infrastructure decisions resolved (§7); all content
-gaps resolved (§8). Nothing blocks Pass 2 — the build order in §10 can start at step 1.
+**Status:** built and shipped. Pass 2 complete — see §11 for measured results and the
+two items that remain in Andres's hands.
 
 ---
 
@@ -581,3 +581,84 @@ Each numbered item is its own commit.
 
 Gates on every commit: `npm run lint` and `npm run build` clean, screenshots at 1440px and
 390px, and a pass against the banned-patterns list.
+
+
+---
+
+## 11. Results
+
+Measured against the built site, not asserted.
+
+### Lighthouse
+
+| | |
+|---|---|
+| Performance | **98** |
+| Accessibility | **100** |
+| Best practices | **100** |
+| SEO | **100** |
+
+LCP 2.4s · **CLS 0** · TBT 50ms · FCP 1.4s · Speed Index 1.4s.
+
+Lighthouse is a lab tool and does not produce INP, which is a field metric. The lab proxy is
+TBT (50ms). Directly measured, the page's only interactive control — the Orbital mode
+switcher — goes from click to next paint in 33.4ms median, 33.5ms max, i.e. one frame.
+
+Two findings from the first run were real bugs and were fixed rather than explained away:
+
+- **26 nodes failed colour contrast at 2.22:1.** `tokens.css` documents `--rule` as
+  hairlines-only-never-text, and four stylesheets then used it as a text colour. Added
+  `--dim #7a756f` at 4.60:1. Accessibility went 95 → 100.
+- **CLS was 0.017 on `.hero__field`.** The "zero CLS by construction" claim covered the
+  canvas — the box is reserved — but not the lead paragraph above it, which reflowed when
+  IBM Plex Sans swapped in. Metric-matched fallbacks hold line-box height without
+  guaranteeing identical line breaks. Preloading Plex Sans took CLS to 0.
+
+### Hero
+
+Measured on a real GPU. Headless Chromium rasterises in software and reported 100ms frame
+gaps that were compositing, not the render loop.
+
+- `draw()` 3.8ms median, 5.3ms p95 at 1440; 3.0ms at 390 — against a 33.3ms budget at 30fps.
+- rAF locked at 16.7ms, max 16.8ms: no dropped frames.
+- Reduced motion draws exactly one frame and leaves the loop idle, verified by cell count
+  holding steady across 2.5s.
+
+### Weight
+
+| | before | after |
+|---|---|---|
+| JS | 1108 KB (306 gz) | 209 KB (67 gz) |
+| CSS | 22.1 KB | 12.9 KB |
+| Served HTML | 1584 bytes, empty shell | 15.5 KB of real content |
+| Fonts | none loaded (Inter declared, never fetched) | 192 KB, self-hosted, metric-matched |
+
+### Banned patterns
+
+Audited against the built CSS and HTML: zero uppercase transforms, zero tracked-out
+letter-spacing, zero middle dots or arrows in copy, zero pills, zero gradients, zero hover
+lifts, zero tinted near-blacks, zero filler copy. One `box-shadow` remains and is a 1px inset
+rule marking the active Orbital mode, not a card shadow.
+
+### Accessibility
+
+23 interactive elements, all keyboard-reachable, all with a visible focus style. Heading
+order `h1 → h2 → h3 → h4 → h3 → h3 → h2 → h3 → h4 → h3 → h3 → h2`: one `h1`, no skipped
+levels. The mode switcher operates from the keyboard.
+
+---
+
+## 12. Still in Andres's hands
+
+1. **Flip the primary domain to the apex in Vercel → Settings → Domains.** The canonical,
+   the sitemap and the `vercel.json` redirect all point at `andresbotia.com`, but the
+   apex → www 308 currently in front of the site is a project-level setting. Until it is
+   flipped, the canonical still names a host that redirects away. Verify afterwards with
+   `curl -I https://andresbotia.com/` — it should return 200, not 308.
+
+2. **Submit the sitemap in Google Search Console** (`https://andresbotia.com/sitemap.xml`)
+   and request indexing for the homepage.
+
+Name-query ranking is also driven by consistent off-site profiles. GitHub, LinkedIn and any
+other bio should use the same spelled-out name and link back to the site, because that is
+what `sameAs` in the Person markup is there to corroborate.
