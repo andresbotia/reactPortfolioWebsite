@@ -43,31 +43,6 @@ body {
   background: var(--ground);
 }
 
-.site-dither-background,
-.dither-fallback {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.site-dither-background {
-  opacity: 0.46;
-  mask-image: linear-gradient(to bottom, black 0, black 86%, transparent 100%);
-}
-
-.dither-canvas {
-  width: 100%;
-  height: 100%;
-}
-
-.dither-fallback {
-  background:
-    radial-gradient(circle at 24% 18%, rgba(123, 220, 255, 0.08), transparent 28rem),
-    radial-gradient(circle at 76% 54%, rgba(147, 240, 200, 0.06), transparent 30rem),
-    linear-gradient(135deg, rgba(123, 220, 255, 0.025), transparent 46%);
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -1009,10 +984,6 @@ main {
 
   .experience-role-tabs {
     justify-content: flex-start;
-  }
-
-  .site-dither-background {
-    opacity: 0.34;
   }
 
   .case-grid {
