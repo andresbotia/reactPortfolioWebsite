@@ -326,64 +326,7 @@ main {
   line-height: 1.65;
 }
 
-.github-panel {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background:
-    linear-gradient(135deg, rgba(123, 220, 255, 0.08), transparent 42%),
-    var(--surface-readable);
-  padding: clamp(22px, 4vw, 34px);
-  box-shadow: var(--edge-glow);
-  backdrop-filter: blur(18px);
-}
-
-.github-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.github-stat-grid article {
-  min-height: 150px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 18px;
-  background: rgba(3, 7, 12, 0.82);
-}
-
-.github-stat-grid svg {
-  color: var(--accent);
-}
-
-.github-stat-grid span {
-  display: block;
-  margin-top: 24px;
-  color: var(--text);
-  font-size: clamp(1.8rem, 3vw, 3rem);
-  font-weight: 620;
-  line-height: 1;
-}
-
 .github-stat-grid p,
-.github-state {
-  margin-top: 10px;
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-}
-
-.github-meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px 24px;
-  margin-top: 22px;
-}
-
-.github-meta-row strong {
-  color: var(--text);
-  font-weight: 620;
-}
 
 .stack-group {
   padding: 22px;
