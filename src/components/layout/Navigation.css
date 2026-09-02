@@ -1,0 +1,117 @@
+/*
+ * Masthead — the top row of the hero wireframe in PLAN.md §4.
+ *
+ * A name, three destinations, and the résumé, over one hairline. No pill, no
+ * floating capsule, no backdrop blur, no hamburger: with three links there is
+ * nothing to hide behind a menu button, so the interaction surface disappears
+ * instead of being redesigned.
+ */
+
+.masthead {
+  position: relative;
+  z-index: 10;
+  background: var(--ground);
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.masthead__inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.1rem var(--gutter);
+}
+
+.masthead__name {
+  color: var(--signal);
+  font-size: var(--size-body);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.masthead__name:focus-visible,
+.masthead__link:focus-visible {
+  outline: 2px solid var(--instrument);
+  outline-offset: 4px;
+}
+
+.masthead__links {
+  display: flex;
+  align-items: baseline;
+  gap: 1.75rem;
+}
+
+/*
+ * Hovering the group dims every sibling and leaves the hovered one lit, so the
+ * pointer reads as a focus rather than as a highlight. Taken from factory.ai.
+ */
+.masthead__links:hover .masthead__link,
+.masthead__links:focus-within .masthead__link {
+  opacity: 0.6;
+}
+
+.masthead__links .masthead__link:hover,
+.masthead__links .masthead__link:focus-visible {
+  opacity: 1;
+}
+
+.masthead__link {
+  position: relative;
+  color: var(--read);
+  font-size: var(--size-body);
+  transition: opacity var(--dur-hover) var(--ease), color var(--dur-hover) var(--ease);
+}
+
+.masthead__link:hover,
+.masthead__link:focus-visible {
+  color: var(--signal);
+}
+
+.masthead__link::after {
+  position: absolute;
+  bottom: -0.35em;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transition: width var(--dur-underline) var(--ease);
+}
+
+.masthead__link:hover::after,
+.masthead__link:focus-visible::after {
+  width: 100%;
+}
+
+/* The section you are actually in. A real state, so it gets a persistent rule
+   rather than a colour wash. */
+.masthead__link[aria-current="true"] {
+  color: var(--signal);
+}
+
+.masthead__link[aria-current="true"]::after {
+  width: 100%;
+  background: var(--instrument);
+}
+
+.masthead__resume {
+  color: var(--signal);
+  font-size: var(--size-body);
+  font-weight: 500;
+}
+
+@media (max-width: 639px) {
+  .masthead__inner {
+    flex-wrap: wrap;
+    gap: 0.85rem 1.5rem;
+  }
+
+  .masthead__links {
+    order: 3;
+    flex-basis: 100%;
+    gap: 1.5rem;
+  }
+}

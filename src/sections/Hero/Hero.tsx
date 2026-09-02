@@ -1,31 +1,29 @@
-import { ArrowDown, Download, Mail } from "lucide-react";
-import { ButtonLink } from "../../components/ui/ButtonLink";
 import { profile } from "../../data/profile";
+import "./Hero.css";
 
 export function Hero() {
   return (
-    <section className="hero-section" id="top">
-      <div className="hero-content">
-        <p className="eyebrow">Software engineer / Florida</p>
-        <h1>{profile.headline}</h1>
-        <p className="hero-copy">{profile.summary}</p>
-        <div className="hero-actions" aria-label="Primary actions">
-          <ButtonLink href="#work" variant="primary">
-            View My Work <ArrowDown size={18} />
-          </ButtonLink>
-          <ButtonLink href="#experience" variant="secondary">
-            Experience
-          </ButtonLink>
-          <ButtonLink href={profile.resumePath} variant="ghost">
-            <Download size={18} /> Resume
-          </ButtonLink>
+    <section className="hero" id="top">
+      <div className="hero__inner">
+        <div className="hero__type">
+          <h1 className="hero__name">{profile.name}</h1>
+          <p className="hero__lead">{profile.lead}</p>
+          <nav className="hero__links" aria-label="Primary">
+            <a className="hero__link" href="#work">
+              Work
+            </a>
+            <a className="hero__link" href={profile.resumePath}>
+              Résumé
+            </a>
+          </nav>
         </div>
-        <div className="hero-meta">
-          <a href={`mailto:${profile.email}`}>
-            <Mail size={16} /> {profile.email}
-          </a>
-          <span>34.000 N / systems in motion</span>
-        </div>
+
+        {/*
+          The glyph field mounts into this column client-side. It stays empty in
+          the server HTML on purpose: it is decoration, the name is the content,
+          and reserving the box here means the canvas can never shift the page.
+        */}
+        <div className="hero__field" aria-hidden="true" />
       </div>
     </section>
   );

@@ -1,0 +1,131 @@
+/*
+ * Hero — see PLAN.md §4.
+ *
+ * Two columns: type left, glyph field right, bleeding past the right edge.
+ * Asymmetric and not centred, which is the whole composition.
+ *
+ * The field column is reserved in the DOM here and filled client-side in
+ * step 3. If the canvas never mounts — init failure, JS off, a crawler — the
+ * column is simply empty black and the layout is byte-identical. That is the
+ * graceful degradation, and it means zero CLS by construction rather than by
+ * guessing a height.
+ */
+
+.hero {
+  position: relative;
+  z-index: 1;
+  /* Opaque: the hero is true black even while the old scroll background is
+     still mounted below it. That background is removed in its own commit. */
+  background: var(--ground);
+  /* The gutter belongs to .hero__inner, not here, so that the h1 lands on the
+     same x as the masthead name. That shared left edge is the page's spine. */
+  padding: var(--hero-pad-top) 0 var(--hero-pad-bottom);
+  overflow: hidden; /* lets the field bleed without scrolling the page sideways */
+}
+
+.hero__inner {
+  display: grid;
+  gap: calc(var(--u) * 0.5);
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.hero__name {
+  margin: 0;
+  color: var(--signal);
+  font-family: var(--serif);
+  font-size: var(--u);
+  font-weight: 300;
+  /* The display optical size is the point of using a variable serif: this is a
+     real display cut, not a text face scaled up. */
+  font-variation-settings: "opsz" 72;
+  line-height: var(--leading-display);
+  letter-spacing: var(--track-display);
+  text-wrap: balance;
+}
+
+.hero__lead {
+  max-width: var(--measure-lead);
+  margin: var(--hero-h1-lead) 0 0;
+  color: var(--read);
+  font-size: var(--size-lead);
+  line-height: var(--leading-lead);
+}
+
+.hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  margin-top: var(--hero-lead-links);
+}
+
+/*
+ * Links are a word and a 1px rule that grows from nothing. No arrow glued on
+ * the end, no pill, no lift.
+ */
+.hero__link {
+  position: relative;
+  color: var(--signal);
+  font-size: var(--size-body);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.hero__link::after {
+  position: absolute;
+  bottom: -0.35em;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transition: width var(--dur-underline) var(--ease);
+}
+
+.hero__link:hover::after,
+.hero__link:focus-visible::after {
+  width: 100%;
+}
+
+.hero__link:focus-visible {
+  outline: 2px solid var(--instrument);
+  outline-offset: 4px;
+}
+
+/*
+ * Reserved space for the glyph field. aspect-ratio holds the box open before
+ * anything paints into it, so mounting the canvas shifts nothing.
+ */
+/*
+ * Reserved space for the glyph field. The subject is radially symmetric, so the
+ * box is square; max-height caps it so an empty column cannot dictate the height
+ * of the whole hero.
+ */
+.hero__field {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 20rem;
+}
+
+@media (min-width: 900px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 30rem) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--rail-gap);
+  }
+
+  /* Height-driven so the box stays genuinely square: a width-driven box with a
+     max-height clamps to a rectangle, and then the reservation would be lying
+     about the shape the canvas is going to fill. */
+  .hero__field {
+    width: auto;
+    max-width: none;
+    height: min(30rem, 58vh);
+    /* Bleeds past the frame edge; .hero clips it. */
+    margin-right: -8vw;
+    margin-left: auto;
+  }
+}

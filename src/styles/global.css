@@ -19,8 +19,8 @@
   --radius: 8px;
   /* --max, --sans and --mono now live in tokens.css. Inter was declared here but
      never loaded, so the site had been rendering in the system UI face. */
-  color: var(--text);
-  background: var(--bg);
+  color: var(--read);
+  background: var(--ground);
   font-family: var(--sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -34,30 +34,13 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--bg);
+  background: var(--ground);
 }
 
 body {
   margin: 0;
   min-width: 320px;
-  background:
-    linear-gradient(180deg, rgba(5, 7, 11, 0.16), var(--bg) 32rem),
-    radial-gradient(circle at 18% 12%, rgba(123, 220, 255, 0.12), transparent 28rem),
-    radial-gradient(circle at 82% 4%, rgba(76, 157, 255, 0.12), transparent 32rem),
-    var(--bg);
-}
-
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-  background-image:
-    linear-gradient(rgba(173, 211, 235, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(173, 211, 235, 0.035) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: linear-gradient(to bottom, black, transparent 72%);
+  background: var(--ground);
 }
 
 .site-dither-background,
@@ -96,7 +79,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--instrument);
   outline-offset: 4px;
 }
 
@@ -125,143 +108,6 @@ main {
   overflow: hidden;
 }
 
-.site-nav {
-  position: fixed;
-  top: 18px;
-  left: 50%;
-  z-index: 50;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 18px;
-  align-items: center;
-  width: min(calc(100% - 32px), var(--max));
-  padding: 10px 12px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  transform: translateX(-50%);
-  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-}
-
-.site-nav--scrolled,
-.mobile-nav {
-  border-color: var(--line);
-  background: rgba(5, 7, 11, 0.78);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(20px);
-}
-
-.brand {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  box-shadow: var(--edge-glow);
-}
-
-.desktop-nav {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-}
-
-.desktop-nav a,
-.nav-actions a,
-.mobile-nav a {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 14px;
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 0.88rem;
-  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
-}
-
-.desktop-nav a:hover,
-.nav-actions a:hover,
-.mobile-nav a:hover,
-.desktop-nav a[aria-current="page"],
-.mobile-nav a[aria-current="page"] {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text);
-}
-
-.desktop-nav a[aria-current="page"],
-.mobile-nav a[aria-current="page"] {
-  box-shadow: inset 0 -1px 0 rgba(123, 220, 255, 0.72);
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.nav-actions a:not(.resume-link) {
-  width: 40px;
-  padding: 0;
-}
-
-.social-icon {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
-}
-
-.resume-link {
-  border: 1px solid var(--line-strong);
-}
-
-.mobile-toggle {
-  display: none;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
-  box-shadow: var(--edge-glow);
-}
-
-.mobile-nav {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  display: grid;
-  width: min(280px, calc(100vw - 32px));
-  padding: 10px;
-  border-radius: var(--radius);
-}
-
-.hero-section {
-  position: relative;
-  min-height: auto;
-  display: grid;
-  align-items: center;
-  padding: clamp(116px, 14vh, 164px) 24px 64px;
-  isolation: isolate;
-}
-
-.hero-section::after {
-  display: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  width: min(100%, var(--max));
-  margin: 0 auto;
-}
-
 .eyebrow,
 .section-kicker,
 .node-index,
@@ -273,33 +119,11 @@ main {
   text-transform: uppercase;
 }
 
-.hero-content h1 {
-  max-width: 860px;
-  margin-top: 18px;
-  font-size: clamp(3.5rem, 9vw, 8.7rem);
-  line-height: 0.9;
-  font-weight: 620;
-}
-
-.hero-copy {
-  max-width: 720px;
-  margin-top: 28px;
-  font-size: clamp(1.06rem, 1.5vw, 1.32rem);
-  line-height: 1.65;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
-}
-
-.hero-actions,
-.hero-meta,
 .tag-row,
 .contact-links {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-}
-
-.hero-actions {
-  margin-top: 34px;
 }
 
 .button-link {
@@ -336,20 +160,6 @@ main {
 
 .button-link--ghost {
   background: transparent;
-}
-
-.hero-meta {
-  margin-top: 24px;
-  color: var(--quiet);
-  font-family: var(--mono);
-  font-size: 0.82rem;
-}
-
-.hero-meta a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
 }
 
 .section {
@@ -568,7 +378,7 @@ main {
 }
 
 .experience-role-tabs button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--instrument);
   outline-offset: 3px;
 }
 
@@ -718,7 +528,7 @@ main {
 }
 
 .preview-carousel-button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--instrument);
   outline-offset: 3px;
 }
 
@@ -1149,20 +959,6 @@ main {
 }
 
 @media (max-width: 920px) {
-  .site-nav {
-    grid-template-columns: auto 1fr auto;
-  }
-
-  .desktop-nav,
-  .nav-actions {
-    display: none;
-  }
-
-  .mobile-toggle {
-    display: grid;
-    grid-column: 3;
-  }
-
   .split-layout,
   .section-heading-row,
   .project-case,
@@ -1187,19 +983,6 @@ main {
 }
 
 @media (max-width: 620px) {
-  .site-nav {
-    top: 10px;
-    width: min(calc(100% - 20px), var(--max));
-  }
-
-  .hero-section {
-    padding: 94px 18px 40px;
-  }
-
-  .hero-content h1 {
-    font-size: clamp(3rem, 16vw, 4.5rem);
-  }
-
   .button-link {
     width: 100%;
   }
