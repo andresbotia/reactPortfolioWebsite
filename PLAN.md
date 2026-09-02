@@ -3,9 +3,8 @@
 Design plan and agreed decisions for the andresbotia.com rebuild. Written before any
 production code exists, as the durable record of what was agreed.
 
-**Status:** plan drafted; all design and infrastructure decisions resolved (§7). Blocked on
-two content gaps before the Experience section can be written (§8): the truncated Foot Locker
-description, and whether any role carries a real metric.
+**Status:** plan complete. All design and infrastructure decisions resolved (§7); all content
+gaps resolved (§8). Nothing blocks Pass 2 — the build order in §10 can start at step 1.
 
 ---
 
@@ -488,32 +487,65 @@ path.**
 
 ---
 
-## 8. Open questions — blocking Pass 2
+## 8. Content gaps — all resolved
 
-The Experience section cannot be written without these. No gaps get papered over.
+No gap was papered over. Source text below is Andres's own; nothing is inferred.
 
-1. **Foot Locker — description truncated.** LinkedIn text cuts off at "Contributed to
-   implementing CI/CD, instrumentation, and monitoring on key systems." Need the rest.
+1. ✅ **Foot Locker — Core Retail Internship, May–Jul 2021.** Supplied:
 
-2. ~~**Cendyn, System Analyst Intern (Oct 2021 – May 2022) — no description.**~~ ✅ **Resolved.**
-   Folds into a single Cendyn tenure as title and dates only. It ran eight months and
-   converted into the Associate Software Engineer role, so the progression is the fact worth
-   showing; an invented paragraph would be worse than a clean line.
+   > Contributed to CI/CD, instrumentation, and monitoring on key internal systems, and
+   > worked on automation across retail site operations.
 
-3. **Metrics — no role carries a measurable outcome.** Two specific numbers are worth
-   checking before answering "nothing," because both are real, and neither requires
-   permission to state:
-   - roughly how many people use the **Banyan Executive Dashboard**;
-   - roughly how many **RPG programs or business systems** are maintained.
+2. ✅ **Cendyn, System Analyst Intern (Oct 2021 – May 2022).** Folds into a single Cendyn
+   tenure as title and dates only. It ran eight months and converted into the Associate
+   Software Engineer role, so the progression is the fact worth showing; an invented
+   paragraph would be worse than a clean line.
 
-   If neither can be stood behind, the section ships without numbers rather than
-   manufacturing them.
+3. ✅ **Metrics.** Answered, and the answer is not a number. No invented figures ship, and
+   "the entire executive team" is **not** converted into a headcount. The Banyan Executive
+   Dashboard adoption story (§8.1) is the proof point, and it is stronger than a metric would
+   have been.
 
-Also outstanding, non-blocking:
+4. **`og:image`** — non-blocking, still to make. Proposed 1200×630: *Andres Botia* in
+   Newsreader, *Software engineer* in Plex Mono, one still frame of the glyph field, on black.
 
-4. **`og:image`** — none exists today, so every share renders blank. Proposed 1200×630:
-   *Andres Botia* in Newsreader, *Software engineer* in Plex Mono, one still frame of the
-   glyph field, on black.
+### 8.1 Banyan Executive Dashboard — source material
+
+Andres's own account, verbatim in substance:
+
+> Self-initiated, not assigned. Pulls live flight data from FlightAware and cross-references
+> it against reservations and fueling records to surface financials and flag flights that
+> didn't come through — work that was previously done by hand, someone manually checking and
+> writing down discrepancies. Now used daily by the entire executive team.
+
+**Drafted copy for the site:**
+
+> **Banyan Executive Dashboard**
+>
+> Built unprompted. Pulls live FlightAware data, cross-references reservations and fueling
+> records, and surfaces the financials — including flights that never came through. That
+> reconciliation was done by hand before. The executive team uses it daily.
+
+**Placement: inside Experience, given structural weight — not a second Work case study.**
+Considered and rejected as a case study for two reasons:
+
+- **It cannot carry the format.** Orbital has a live URL, public source, and captured
+  imagery. The dashboard runs on customer flight data, reservations, fueling records, and
+  financials, so there is nothing publishable — no link, no source, no screenshots. A case
+  study format promises evidence; an image-less block sitting beside Orbital's video loop
+  reads as the weaker of the two, which inverts the truth.
+- **Its power is the context.** Unprompted, inside a company, adopted at the top. Lifting it
+  into Work strips exactly that. Work says what was made; Experience says what changed
+  because he was there. This is the second kind of thing, and the strongest instance of it.
+
+**It also solves the hardest problem in this section.** The brief flagged that the two Banyan
+titles describe near-identical work. The honest difference is not wording — it is that the
+dashboard is **self-initiated**, and taking on unprompted, production-adopted work is
+precisely what separates the engineer role from the apprentice role. The progression is shown
+by a fact rather than by rewording the same paragraph twice.
+
+It therefore gets its own headed block within the Banyan tenure, not a bullet, and it is the
+hinge between the two titles.
 
 ---
 
@@ -540,7 +572,8 @@ Each numbered item is its own commit.
    works.
 5. Work: Orbital case study with captured imagery, plus the two-item list. Cut the two dropped
    projects from `src/data/projects.ts`.
-6. Experience: rebuilt from LinkedIn text, once §8 is answered. Stack folded in.
+6. Experience: rebuilt from the §8 source text, with the Executive Dashboard as a headed
+   block inside the Banyan tenure and the hinge between its two titles. Stack folded in.
 7. Remove the GitHub section, hook, and serverless function.
 8. SEO: canonical/apex, prerender, `Person` + `CreativeWork` JSON-LD, sitemap, robots, OG
    image.
