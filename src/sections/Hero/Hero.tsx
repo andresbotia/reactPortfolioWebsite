@@ -1,4 +1,5 @@
 import { profile } from "../../data/profile";
+import { DecodeLine } from "./DecodeLine";
 import { GlyphField } from "./GlyphField";
 import "./Hero.css";
 
@@ -8,7 +9,7 @@ export function Hero() {
       <div className="hero__inner">
         <div className="hero__type">
           <h1 className="hero__name">{profile.name}</h1>
-          <p className="hero__lead">{profile.lead}</p>
+          <DecodeLine className="hero__lead" text={profile.lead} />
           <nav className="hero__links" aria-label="Primary">
             <a className="hero__link" href="#work">
               Work

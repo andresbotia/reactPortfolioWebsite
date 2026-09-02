@@ -3,8 +3,8 @@ export const profile = {
   initials: "AB",
   role: "Software engineer",
   headline: "Andres Botia",
-  /* The hero line. Approved copy — see PLAN.md §9. */
-  lead: "Software engineer. I put modern interfaces on systems that were never meant to have them.",
+  /* The hero line. See PLAN.md §9 and §13. */
+  lead: "Software engineer, currently working in aviation at Banyan Air.",
   summary:
     "Full-stack engineer with a focus on practical systems across modern interfaces, APIs, SQL/data, automation, IBM i/RPG environments, aviation technology, and operational software.",
   location: "Deerfield Beach, Florida",

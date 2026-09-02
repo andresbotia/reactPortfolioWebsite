@@ -159,3 +159,54 @@
     margin-left: auto;
   }
 }
+
+/*
+ * The decode layer. Each word's final text is rendered as a hidden ghost that
+ * sets the box; the animating characters sit inside it absolutely positioned.
+ * The word therefore occupies exactly its resolved size for the whole
+ * animation, so nothing re-wraps and nothing shifts, with no JS measurement.
+ *
+ * visibility:hidden rather than opacity:0 — it also removes the ghost from the
+ * accessibility tree, so the sentence is not exposed twice.
+ */
+.decode-word {
+  position: relative;
+  display: inline-block;
+  white-space: pre;
+}
+
+.decode-ghost {
+  visibility: hidden;
+}
+
+/* Clipped to the word's own box so noise glyphs, which are not the same widths
+   as the letters they stand in for, can never spill onto a neighbour. */
+.decode-live {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  white-space: pre;
+}
+
+/* Locked characters are already text and take the body colour. Unresolved ones
+   are still part of the field's alphabet and take its hue, so the line resolves
+   in colour and in glyph together rather than snapping at the end. */
+.decode-done {
+  color: var(--read);
+}
+
+.decode-noise {
+  color: var(--instrument);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

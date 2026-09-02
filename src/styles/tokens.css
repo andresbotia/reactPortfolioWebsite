@@ -80,7 +80,11 @@
   /* Six durations, total. Nothing animates on scroll. */
   --dur-hover: 200ms;
   --dur-underline: 240ms;
-  --dur-field-in: 900ms;
+  /* The field's fade and the hero line's decode are one gesture, not two: both
+     start at first paint and share an envelope, so the load reads as a single
+     moment rather than as two effects competing in the same hero. */
+  --dur-field-in: 1600ms;
+  --dur-decode: 1900ms;
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
@@ -95,5 +99,6 @@
     --dur-hover: 0ms;
     --dur-underline: 0ms;
     --dur-field-in: 0ms;
+    --dur-decode: 0ms;
   }
 }
