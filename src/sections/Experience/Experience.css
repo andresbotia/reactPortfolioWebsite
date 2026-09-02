@@ -81,7 +81,7 @@
 
 /* A date is a value, so it is set in mono. A job title is not, so it is not. */
 .role-dates {
-  color: var(--rule);
+  color: var(--dim);
   font-family: var(--mono);
   font-size: var(--size-micro);
   font-variant-numeric: tabular-nums;

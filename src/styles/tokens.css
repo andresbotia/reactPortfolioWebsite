@@ -21,6 +21,10 @@
   --signal: #f2f0ed; /* headlines, emphasis            18.7:1 on ground */
   --read: #8c8681; /* body copy                       5.84:1 on ground, AA */
   --rule: #4a4542; /* hairlines only, never text      2.21:1 on ground */
+  /* Secondary text. --rule is genuinely too dark to read at any size, so small
+     print gets its own value that clears AA rather than borrowing the hairline
+     colour, which is what an earlier pass here did wrong. */
+  --dim: #7a756f; /* small secondary text            4.60:1 on ground, AA */
   --instrument: #7fb6ff; /* hero hue, links, live states    10.0:1 on ground */
 
   /* Hairlines at two strengths. --rule-soft separates, --rule delimits. */

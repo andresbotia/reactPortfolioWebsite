@@ -143,7 +143,7 @@
 .case-stack {
   max-width: var(--measure-body);
   margin: 1.6rem 0 0;
-  color: var(--rule);
+  color: var(--dim);
   font-size: var(--size-value);
   line-height: 1.7;
 }

@@ -47,7 +47,7 @@
 }
 
 .rail-note {
-  color: var(--rule);
+  color: var(--dim);
   font-size: var(--size-micro);
   line-height: 1.6;
 }

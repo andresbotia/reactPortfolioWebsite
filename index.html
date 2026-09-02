@@ -5,13 +5,22 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
-    <!-- Newsreader sets the h1, which is the LCP element. Preloaded so it is
-         requested alongside the stylesheet rather than after it. The other two
-         faces are metric-matched to their fallbacks, so discovering them later
-         costs a glyph swap and no layout shift. -->
+    <!-- Both faces that set text above the fold are preloaded so they are
+         requested alongside the stylesheet rather than discovered after it.
+         Metric-matched fallbacks make the swap shift-free vertically, but the
+         line breaks in the hero paragraph can still differ between fallback and
+         real face, and that reflow was the site's only measured layout shift.
+         Plex Mono is not preloaded: it sets no text above the fold. -->
     <link
       rel="preload"
       href="/fonts/newsreader-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/plex-sans-latin-var.woff2"
       as="font"
       type="font/woff2"
       crossorigin
