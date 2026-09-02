@@ -1,4 +1,5 @@
 /* Order matters: faces, then tokens, then the styles that consume them. */
 @import "./styles/fonts.css";
 @import "./styles/tokens.css";
+@import "./styles/band.css";
 @import "./styles/global.css";

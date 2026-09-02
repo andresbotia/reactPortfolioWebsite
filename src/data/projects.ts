@@ -1,54 +1,100 @@
+export type ProjectLink = {
+  label: string;
+  href: string;
+};
+
+export type ProjectShot = {
+  /* The app's own mode names, so the control describes the product rather than
+     inventing categories for it. */
+  mode: string;
+  src: string;
+  alt: string;
+};
+
 export type Project = {
   name: string;
-  date?: string;
-  label: string;
-  description: string;
-  visual?: "yearly-tracker" | "grand-slam";
-  image?: string;
-  createdFor?: string;
-  problem?: string;
-  system?: string;
+  year: string;
+  status: string;
+  summary: string;
+  stack: string[];
+  links: ProjectLink[];
+  /* Present only on the lead case study. */
+  body?: string[];
   engineering?: string[];
-  result?: string;
-  technologies: string[];
-  href?: string;
-  links?: {
-    label: string;
-    href: string;
-  }[];
+  shots?: ProjectShot[];
+};
+
+/*
+ * Orbital leads as a case study; the rest are a short list. Two earlier entries
+ * — a 2020 static photography site and a Chrome extension that replaced one
+ * button — were cut, because three strong entries read better than five uneven
+ * ones.
+ */
+export const lead: Project = {
+  name: "Orbital",
+  year: "2026",
+  status: "Live",
+  summary:
+    "Real-time visualisation of activity across Earth and near-Earth space.",
+  body: [
+    "A dark interactive globe sits at the centre, surrounded by sparse HUD telemetry built from live public data: aircraft positions, the ISS, earthquakes, storms, wildfires, volcanoes, space weather, and the satellite catalogue.",
+    "Four modes. Overview composes everything at once; Aviation, Space and Earth each narrow the field to one domain.",
+  ],
+  engineering: [
+    "One instanced draw call per category, rather than a mesh per object.",
+    "Screen-space decluttering, so dense aircraft fields stay readable.",
+    "SGP4 satellite propagation from CelesTrak TLEs, run locally on a throttled frame budget.",
+    "Natural Earth geometry loaded only near regional zoom, with a distance-based crossfade between detail levels.",
+    "Provider responses isolated behind adapters, so components only ever see normalised domain models.",
+    "Live status derived from real fetch timestamps, so a partly degraded feed never discards last-good data.",
+  ],
+  stack: [
+    "React",
+    "TypeScript",
+    "Vite",
+    "Three.js",
+    "React Three Fiber",
+    "Zustand",
+    "TanStack Query",
+    "Vitest",
+  ],
+  shots: [
+    {
+      mode: "Overview",
+      src: "/orbital/overview.webp",
+      alt: "Orbital by Andres Botia, Overview mode: a dark 3D globe showing live aircraft, storm, wildfire and earthquake markers over the Americas, with live counts and an event stream around it.",
+    },
+    {
+      mode: "Aviation",
+      src: "/orbital/aviation.webp",
+      alt: "Orbital by Andres Botia, Aviation mode: live aircraft positions from the ADS-B network plotted across the globe with flight telemetry panels.",
+    },
+    {
+      mode: "Space",
+      src: "/orbital/space.webp",
+      alt: "Orbital by Andres Botia, Space mode: tracked satellites propagated from CelesTrak orbital elements, with the ISS and its orbit highlighted.",
+    },
+    {
+      mode: "Earth",
+      src: "/orbital/earth.webp",
+      alt: "Orbital by Andres Botia, Earth mode: weather, seismic and wildfire activity layered over the globe with regional coastline detail.",
+    },
+  ],
+  links: [
+    { label: "Live site", href: "https://orbital-seven-azure.vercel.app" },
+    { label: "Source", href: "https://github.com/andresbotia/Orbital" },
+  ],
 };
 
 export const projects: Project[] = [
   {
     name: "Yearly Tracker",
-    date: "Jan 24, 2026",
-    label: "Published Mobile App",
-    visual: "yearly-tracker",
-    description:
-      "An offline-first mobile app for setting yearly goals, tracking habits, and measuring progress across the year.",
-    createdFor:
-      "Published personal product for iOS and Android, with public source available on GitHub.",
-    problem:
-      "Yearly goals and daily habits often end up split across notes, spreadsheets, and apps that add account, sync, or analytics overhead.",
-    system:
-      "Expo and React Native app with yearly goals, habit tracking, dashboard summaries, widgets, local device storage, and customizable color themes.",
-    engineering: [
-      "Expo",
-      "React Native",
-      "AsyncStorage",
-      "iOS",
-      "Android",
-      "Kotlin",
-      "Swift",
-    ],
-    result:
-      "Shipped as a privacy-first app with no accounts, ads, analytics, tracking, subscriptions, or cloud syncing.",
-    technologies: ["Expo", "React Native", "JavaScript", "iOS", "Android"],
+    year: "2026",
+    status: "iOS and Android",
+    summary:
+      "An offline-first app for yearly goals and daily habits. No account, no sync, no analytics — everything stays on the device.",
+    stack: ["React Native", "Expo", "TypeScript"],
     links: [
-      {
-        label: "GitHub",
-        href: "https://github.com/andresbotia/yearly-tracker",
-      },
       {
         label: "App Store",
         href: "https://apps.apple.com/us/app/yearly-tracker/id6757343606",
@@ -57,76 +103,22 @@ export const projects: Project[] = [
         label: "Google Play",
         href: "https://play.google.com/store/apps/details?id=com.andresbotia.yearlytracker&hl=en_US",
       },
+      { label: "Source", href: "https://github.com/andresbotia/yearly-tracker" },
     ],
   },
   {
     name: "Grand Slam Insights",
-    label: "Live Full Stack Site",
-    visual: "grand-slam",
-    description:
-      "A full-stack MLB prediction dashboard for researching markets, model confidence, public baseball data, odds, weather, and calibration.",
-    createdFor:
-      "Live personal project published at grand-slam-insights-client.vercel.app, with a GitHub repository provided by Andres.",
-    problem:
-      "Sports model outputs can be hard to trust when probabilities, book odds, data quality, and backtesting context are separated.",
-    system:
-      "React dashboard with market cards for winner, total runs, NRFI, and props, backed by Express, Supabase, MLB data, odds, weather, snapshots, backfills, and calibration data.",
-    engineering: [
-      "React",
-      "shadcn-style UI",
-      "Express",
-      "Supabase",
-      "MLB Stats API",
-      "The Odds API",
-      "Weather data",
-    ],
-    result:
-      "Published as a live research interface focused on transparent picks, explainability, and honest measurement rather than promising wins.",
-    technologies: ["React", "Express", "Supabase", "MLB Data", "Odds", "Weather"],
+    year: "2025",
+    status: "Live",
+    summary:
+      "A baseball prediction dashboard that shows its own calibration. Model output sits next to book odds and backtests, so a pick can be checked rather than taken on trust.",
+    stack: ["React", "Express", "Supabase"],
     links: [
-      {
-        label: "GitHub",
-        href: "https://github.com/andresbotia/grandSlamBetting",
-      },
       {
         label: "Live site",
         href: "https://grand-slam-insights-client.vercel.app/",
       },
+      { label: "Source", href: "https://github.com/andresbotia/grandSlamBetting" },
     ],
-  },
-  {
-    name: "Photography Portfolio",
-    date: "Dec 26, 2020",
-    label: "Front-End Website",
-    description:
-      "An early personal photography portfolio built with HTML, JavaScript, CSS, and SCSS.",
-    createdFor: "Showcasing photography taken by Andres over the years.",
-    problem:
-      "A visual body of work needed a lightweight web presence while building hands-on front-end experience.",
-    system:
-      "A static portfolio focused on image presentation, transitions, and simple browsing.",
-    engineering: ["JavaScript", "HTML", "CSS", "SCSS"],
-    result:
-      "An early web development project connecting visual work with front-end craft.",
-    technologies: ["JavaScript", "HTML", "CSS", "SCSS"],
-    href: "https://andres-photography-portfolio.netlify.app/",
-  },
-  {
-    name: "Twitter Revenue Chrome Extension",
-    date: "Dec 14, 2023",
-    label: "Browser Extension",
-    description:
-      "A Chrome extension that modifies Twitter/X tweet UI to show estimated revenue for individual tweets.",
-    createdFor:
-      "Personal project to learn and experiment with Chrome extension development.",
-    problem:
-      "The native interface surfaces impressions, but not an estimate of what an individual post could represent in ad revenue.",
-    system:
-      "Browser extension UI layer that reads tweet views and replaces the views affordance with a calculated estimate.",
-    engineering: ["Chrome Extension", "JavaScript", "HTML", "UI integration"],
-    result:
-      "Turned a platform metric into a more useful interface experiment without requiring a separate dashboard.",
-    technologies: ["Chrome Extension", "JavaScript", "HTML"],
-    href: "https://chromewebstore.google.com/detail/twitter-estimated-revenue/fognfoiolehcjbakhcmdppjalhapckno",
   },
 ];

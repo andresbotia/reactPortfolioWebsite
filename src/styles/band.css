@@ -1,0 +1,135 @@
+/*
+ * The page spine — see PLAN.md §4.
+ *
+ * One vertical hairline at a fixed x, identical on every section, never moving.
+ * Left of it a measurement rail carrying real data; right of it the content.
+ * Because the rule never shifts, scrolling reads as one continuous document
+ * rather than as stacked section templates.
+ *
+ * Below 900px the rail collapses to a line above its content and the rule
+ * disappears, because a 7rem column at 390px is not a column.
+ */
+
+.band {
+  position: relative;
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.band-inner {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.band-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.band-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1rem;
+  align-content: start;
+}
+
+/* Mono is for values only: a number, a date, a coordinate, an identifier.
+   Never a word-label — that rule is what keeps the rail reading as data. */
+.rail-value {
+  color: var(--signal);
+  font-family: var(--mono);
+  font-size: var(--size-value);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+.rail-note {
+  color: var(--rule);
+  font-size: var(--size-micro);
+  line-height: 1.6;
+}
+
+.band-body {
+  min-width: 0;
+}
+
+.band-title {
+  margin: 0;
+  color: var(--signal);
+  font-family: var(--serif);
+  font-size: var(--size-h2);
+  font-weight: 300;
+  font-variation-settings: "opsz" 72;
+  line-height: var(--leading-h2);
+  letter-spacing: var(--track-h2);
+  text-wrap: balance;
+}
+
+.band-lead {
+  max-width: var(--measure-lead);
+  margin: 0.9rem 0 0;
+  color: var(--read);
+  font-size: var(--size-lead);
+  line-height: var(--leading-lead);
+}
+
+.band-text {
+  max-width: var(--measure-body);
+  margin: 0;
+  color: var(--read);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+}
+
+/* A word and a rule that grows from nothing. No arrow, no pill, no lift. */
+.link {
+  position: relative;
+  color: var(--signal);
+  font-size: var(--size-body);
+  font-weight: 500;
+}
+
+.link::after {
+  position: absolute;
+  bottom: -0.35em;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transition: width var(--dur-underline) var(--ease);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+  width: 100%;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--instrument);
+  outline-offset: 4px;
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+}
+
+@media (min-width: 900px) {
+  .band-row {
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: var(--rail-gap);
+  }
+
+  .band-rail {
+    flex-direction: column;
+    gap: 0.15rem;
+    height: 100%;
+    padding-right: var(--rail-gap);
+    border-right: 1px solid var(--rule-soft);
+  }
+}
