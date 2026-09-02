@@ -1,0 +1,95 @@
+/*
+ * Design tokens — see PLAN.md §2-§5.
+ *
+ * Two rules that are not obvious from the values alone:
+ *
+ *   1. --mono is only ever applied to a *value*: a number, a date, a coordinate,
+ *      or a machine identifier. Never to a word-label. This is what keeps the
+ *      monospace from becoming decoration.
+ *
+ *   2. --u is the hero's root unit. Every vertical measure in the hero is a ratio
+ *      of it. Body text deliberately does NOT scale with the viewport, because
+ *      reading text should not; those sizes are fixed.
+ */
+
+:root {
+  /* ---- colour ---------------------------------------------------------- */
+  /* Ground is true black, not a tinted near-black: the hero's glyph falloff
+     has to terminate in real black for the field to read as a light source. */
+  --ground: #000000;
+  --surface: #141210; /* the one raised surface, for project imagery */
+  --signal: #f2f0ed; /* headlines, emphasis            18.7:1 on ground */
+  --read: #8c8681; /* body copy                       5.84:1 on ground, AA */
+  --rule: #4a4542; /* hairlines only, never text      2.21:1 on ground */
+  --instrument: #7fb6ff; /* hero hue, links, live states    10.0:1 on ground */
+
+  /* Hairlines at two strengths. --rule-soft separates, --rule delimits. */
+  --rule-soft: #282422;
+
+  /* ---- type ------------------------------------------------------------ */
+  --serif: "Newsreader", "Newsreader Fallback", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", "Plex Sans Fallback", Arial, system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "Plex Mono Fallback", Consolas, ui-monospace, monospace;
+
+  /* The hero's root unit. 44px at 390, 88px at 1440. */
+  --u: clamp(2.75rem, 9vw, 5.5rem);
+
+  --size-h2: clamp(1.75rem, 4vw, 2.75rem);
+  --size-h3: 1.25rem;
+  --size-lead: 1.125rem;
+  --size-body: 1rem;
+  --size-value: 0.8125rem;
+  --size-micro: 0.6875rem;
+
+  --leading-display: 0.92;
+  --leading-h2: 1.05;
+  --leading-h3: 1.25;
+  --leading-lead: 1.55;
+  --leading-body: 1.65;
+
+  --track-display: -0.03em;
+  --track-h2: -0.02em;
+  --track-h3: -0.01em;
+  --track-micro: 0.02em;
+
+  /* Measure. Prose is capped so lines stay readable regardless of container. */
+  --measure-lead: 58ch;
+  --measure-body: 62ch;
+
+  /* ---- hero rhythm, as ratios of --u ----------------------------------- */
+  --hero-pad-top: calc(var(--u) * 1.9);
+  --hero-pad-bottom: calc(var(--u) * 1.2);
+  --hero-h1-lead: calc(var(--u) * 0.3);
+  --hero-lead-links: calc(var(--u) * 0.42);
+
+  /* ---- layout ---------------------------------------------------------- */
+  /* One vertical hairline at a fixed x, identical on every section. The rail
+     left of it carries only real data; it never moves, so the page reads as
+     one document rather than as stacked section templates. */
+  --rail: 8rem;
+  --rail-gap: clamp(1.5rem, 3.5vw, 3rem);
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --max: 72rem;
+  --section-pad: clamp(3.5rem, 8vw, 6.5rem);
+
+  /* ---- motion ---------------------------------------------------------- */
+  /* Six durations, total. Nothing animates on scroll. */
+  --dur-hover: 200ms;
+  --dur-underline: 240ms;
+  --dur-field-in: 900ms;
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+/*
+ * Reduced motion is handled here, in CSS, rather than in JS. The browser
+ * evaluates this before first paint, it has no hydration surface, and it works
+ * with JS disabled. The one thing JS decides is whether the hero's rAF loop
+ * starts, and that reads matchMedia inside an effect — never during render.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-hover: 0ms;
+    --dur-underline: 0ms;
+    --dur-field-in: 0ms;
+  }
+}
