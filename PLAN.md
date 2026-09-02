@@ -3,8 +3,9 @@
 Design plan and agreed decisions for the andresbotia.com rebuild. Written before any
 production code exists, as the durable record of what was agreed.
 
-**Status:** plan drafted, decisions 1 / 5 / 6 / 7 / 9 resolved. Blocked on questions 2, 3, 4
-(§7) before the Experience section can be written.
+**Status:** plan drafted; all design and infrastructure decisions resolved (§7). Blocked on
+two content gaps before the Experience section can be written (§8): the truncated Foot Locker
+description, and whether any role carries a real metric.
 
 ---
 
@@ -426,15 +427,61 @@ and no route that depends on runtime state. So:
 Properties: **zero new dependencies** (`react-dom/server` ships with React), runs identically
 on Vercel and locally, deterministic, ~2 seconds, no browser download, no flake class.
 
-Two things the build must respect to avoid hydration mismatch:
+Hydration is where this pattern actually breaks, so four constraints are binding on the build.
 
-- The hero canvas and any WebGL mount render `null` on the server and mount client-side in an
-  effect. It is `aria-hidden` decoration, so nothing crawlable is lost.
-- No `new Date()`, `Math.random()`, or `window` access during render. All content is static
-  from `src/data/`, so this is a lint rule rather than a redesign.
+**a. Nothing browser-dependent is read during render.** No `new Date()`, `Math.random()`,
+`window`, or `matchMedia` in the render phase — and specifically **not in a lazy `useState`
+initializer**, which runs during render and reads as safe but isn't.
 
-Verified by `curl`-ing the built `dist/index.html` and confirming the name, headline, roles,
-and project copy are present as real text.
+`src/hooks/useWebGLSupported.ts` is a live example of exactly that bug today:
+`useState(detectWebGL)` returns `false` on the server (guarded on `typeof document`) and
+`true` on the client, so server and client render different branches. The component is deleted
+at build step 4, but the hero needs the same capability check, so the replacement detects in
+an effect.
+
+**b. Reduced motion is handled in CSS, not JS.** `@media (prefers-reduced-motion: reduce)` is
+evaluated by the browser before first paint, has zero hydration surface, and works with JS
+disabled. The JS hook survives only where CSS cannot reach — deciding whether the RAF loop
+starts — and even there `matchMedia` is read inside the effect, never during render.
+
+`src/hooks/useReducedMotion.ts` is already correct in this respect (`useState(false)` plus an
+effect). The CSS-first rule is the stronger version, and it also removes a flash the JS-only
+approach causes: a reduced-motion user would otherwise get one animated frame before the
+effect flips the state.
+
+**c. No `React.lazy` anywhere in the tree `renderToString` walks.** `renderToString`'s
+behaviour with an unresolved lazy module is version-dependent and not worth depending on in
+either direction. The only `lazy()` in the repo today is
+`src/components/layout/ScrollBackground.tsx:7`, wrapping `DitherBackground`, which is deleted
+at step 4.
+
+What the hero needs is **client-only mounting**, not code-splitting-with-suspension:
+
+```tsx
+const [mounted, setMounted] = useState(false);
+useEffect(() => { setMounted(true); }, []);
+return <div className="hero-field" aria-hidden="true">{mounted ? <GlyphField /> : null}</div>;
+```
+
+The container ships in the server HTML — so the grid column is reserved and there is no CLS —
+while the canvas does not. If the glyph-field module should also stay out of the initial
+bundle, that is a bare `import()` **inside the effect**: no Suspense, no render-phase
+suspension, no SSR surface.
+
+**d. The script writes every route, and the route list is shared with the sitemap.** The
+script takes a route array and writes `dist/<route>/index.html` for each. **That same array
+generates `sitemap.xml`,** so a route cannot be listed in the sitemap and left unprerendered —
+a structural guarantee rather than a matter of discipline.
+
+Today that array is `["/"]`. There is genuinely one route: `Navigation.tsx` links are in-page
+anchors (`#work`, `#contact`, …), `App.tsx` mounts every section on one page, there is no
+router, and `public/sitemap.xml` contains a single `<loc>`.
+
+**Failure is loud.** After writing, the script asserts each output contains `Andres Botia` and
+clears a minimum byte floor, and exits non-zero otherwise — so a silently empty prerender
+fails the Vercel build instead of deploying an empty shell. Verified additionally by `curl`
+against the built output, confirming name, headline, roles, and project copy are present as
+real text.
 
 **Playwright stays a devDependency for local screenshots only, and never enters the deploy
 path.**
@@ -448,9 +495,10 @@ The Experience section cannot be written without these. No gaps get papered over
 1. **Foot Locker — description truncated.** LinkedIn text cuts off at "Contributed to
    implementing CI/CD, instrumentation, and monitoring on key systems." Need the rest.
 
-2. **Cendyn, System Analyst Intern (Oct 2021 – May 2022) — no description at all.** What was
-   actually done? If nothing memorable, it folds into a single Cendyn tenure as a
-   title-and-date only rather than inventing a paragraph.
+2. ~~**Cendyn, System Analyst Intern (Oct 2021 – May 2022) — no description.**~~ ✅ **Resolved.**
+   Folds into a single Cendyn tenure as title and dates only. It ran eight months and
+   converted into the Associate Software Engineer role, so the progression is the fact worth
+   showing; an invented paragraph would be worse than a clean line.
 
 3. **Metrics — no role carries a measurable outcome.** Two specific numbers are worth
    checking before answering "nothing," because both are real, and neither requires
