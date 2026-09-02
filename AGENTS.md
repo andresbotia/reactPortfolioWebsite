@@ -1,88 +1,136 @@
 # Project
 
-AndresBotia.com is a premium software-engineering portfolio for Andres Botia. It should feel technical, cinematic, polished, modern, interactive, and professional. The core concept is modern interfaces connected to complex real-world systems.
+AndresBotia.com is the personal portfolio for Andres Botia. The positioning is
+specific and worth protecting: modern interfaces on systems that were never
+meant to have them — RPG ILE IV on IBM i talking to React and React Native,
+aviation operations, live telemetry. Do not sand that down into "full-stack
+engineer".
+
+The design plan, the decisions behind it and the reasoning for each are in
+`PLAN.md`. Read it before changing anything structural.
 
 # Architecture
 
-This is a React + Vite + TypeScript app. Content lives in `src/data/`. Page sections live in `src/sections/`. Shared layout and primitives live in `src/components/`. Three.js scenes live in `src/three/`.
+React + Vite + TypeScript. No router: one page, sections mounted in `App.tsx`.
+
+- `src/data/` — all factual content. Content changes must never require
+  touching component code.
+- `src/site.ts` — identity, route list, JSON-LD, sitemap and robots. The route
+  array drives both the prerender and the sitemap, so the two cannot diverge.
+- `src/sections/` — one folder per section, with its CSS beside it.
+- `src/styles/` — `tokens.css` (design tokens), `fonts.css` (self-hosted faces
+  and their metric-matched fallbacks), `band.css` (the shared section spine),
+  `global.css` (base only).
+- `scripts/` — build and dev tooling.
 
 # Commands
 
 ```bash
 npm run dev
 npm run lint
-npm run build
+npm run build     # tsc, client build, SSR build, prerender
 npm run preview
 ```
 
-Before considering work complete, `npm run lint` and `npm run build` must pass.
+`npm run lint` and `npm run build` must both pass before work is complete.
 
-# Design Philosophy
+# Design
 
-Keep the site premium, minimal, technical, aviation-influenced, interactive, and performance-conscious. Do not turn this website into a generic portfolio template.
+Restraint applied to technical subject matter. Confident, spacious, quiet.
 
-# ThreeUI / Three.js
+- **Palette, five values.** `--ground #000000` (true black, not a tinted
+  near-black — the hero's falloff has to terminate in real black), `--signal
+  #F2F0ED`, `--read #8C8681`, `--rule #4A4542` (non-text only, 2.21:1),
+  `--instrument #7FB6FF`. The greys are warm and the accent is cool; that
+  opposition is the whole colour idea.
+- **Two families.** Newsreader at `opsz 72` weight 300 for display only. IBM
+  Plex Sans and Mono for everything else — Plex because Andres writes RPG on
+  IBM i, which is the kind of reason a choice should have.
+- **Mono is for values only**: a number, a date, a coordinate, an identifier.
+  Never a word-label. This is what stops it becoming decoration.
+- **One spine.** A hairline at a fixed x on every section, a rail of real data
+  to its left. Nothing in that rail is decorative.
+- **Boldness is spent once**, in the hero. Everything downstream stays quiet.
 
-ThreeUI Community is an implementation reference for lifecycle, procedural visuals, interaction, and performance patterns. Do not turn this project into a ThreeUI demo gallery. The primary Three.js scenes are the hero route/system topology in `src/three/scenes/HeroScene.tsx` and scroll-reactive voxel field in `src/three/scenes/ScrollVoxelField.tsx`.
+## Banned
 
-Only add new WebGL effects when they clearly improve the portfolio narrative. Prefer one exceptional scene over multiple competing canvases.
+These are the tells of generated design. Do not reintroduce them:
+tracked-uppercase eyebrow labels; one word in a headline accented in another
+colour; meta strings joined with middle dots or slashes; `WORD — fragment`
+labels; arrows glued to links; identical rounded cards sharing one radius and
+one soft shadow; gradient washes as decoration; fade-and-slide-up on every
+section; hover lift on every card; tinted near-black standing in for black;
+monospace on every small label; filler copy ("passionate about", "crafting
+experiences", "let's build something together").
 
-# Component Rules
+# Content
 
-- Keep reusable primitives in `src/components/ui/`.
-- Keep section-specific UI inside the relevant `src/sections/` folder.
-- Keep factual portfolio content centralized in `src/data/`.
-- Avoid giant components.
-- Avoid duplicated content.
-- Avoid unnecessary dependencies.
-- Do not fetch authenticated data directly from the client. GitHub contribution history requires a server-side token if implemented.
+Do not fabricate employers, projects, technologies, dates, metrics, titles,
+education, certifications, contact details, clients, awards or repositories.
+Every claim in `src/data/experience.ts` is traceable to Andres's own words. No
+role carries a metric because none was available, and "the entire executive
+team" is deliberately not converted into a headcount. If something is missing,
+ask him — do not fill the gap.
 
-# Styling Rules
+# Motion
 
-Design tokens live in `src/styles/global.css`. Use restrained dark surfaces, fine borders, precise spacing, strong typography, and subtle cyan/blue accents. Do not introduce one-note palettes, excessive neon, or decorative clutter.
+The complete list: the hero glyph field rotates; the field fades up once on
+load; nav siblings dim on hover; link underlines grow; the Orbital mode
+switcher responds to clicks. That is all. **Nothing animates because the user
+scrolled past it.**
 
-Responsive layouts must be intentional at mobile, tablet, and desktop sizes. Text must not overflow containers.
+Reduced motion is handled in CSS, at the token level, so it is evaluated before
+first paint and works with JS disabled. The only JS read of `matchMedia` decides
+whether the hero's rAF loop starts, and it happens inside an effect.
 
-# Animation Rules
+# The hero
 
-Use one coherent motion system. Avoid excessive animation, scroll-jacking, gratuitous particles, competing visual effects, and animation that harms usability.
+`src/sections/Hero/turbofan.ts` renders a turbofan as a glowing glyph field on
+one canvas with a sprite atlas — no DOM grid. Constraints that are load-bearing
+and expensive to rediscover:
 
-# Performance Rules
+- Blade sweep must stay under one blade pitch. More than that and the blades
+  smear across their neighbours and the disc interferes into noise.
+- The blade profile is a duty cycle, not a cosine power. A cosine reads as a
+  starburst.
+- The character ramp was measured, not chosen by eye. Re-measure before
+  changing it.
+- Luminance is dithered before quantising. That is what removes both the
+  banding and the flat plateau at the core.
+- Density adapts to measured frame cost, because the cost is fill-rate bound
+  and varies by an order of magnitude across real GPUs.
+- Measure performance on a real GPU. Headless Chromium rasterises in software
+  and reports frame times that say nothing about what users see.
 
-- Lazy-load expensive scenes.
-- Pause or unmount offscreen rendering.
-- Use adaptive DPR.
-- Dispose Three.js resources where manual resources are created.
-- Optimize assets.
-- Avoid unnecessary rerenders.
-- Keep mobile GPU performance in mind.
+# Rendering and SEO
 
-# Accessibility Rules
+The site prerenders with `react-dom/server` at build time. **No headless
+browser in the build** — Vercel's build image ships none, cannot cache one and
+has no root to install system libraries with. Playwright is a devDependency for
+local screenshots and the OG image only; it must never enter the deploy path.
 
-- Use semantic HTML.
-- Preserve keyboard support.
-- Keep visible focus states.
-- Respect reduced motion.
-- Provide WebGL fallbacks.
-- Maintain sufficient contrast.
+Four rules keep hydration sound:
 
-# Content Rules
+1. Nothing browser-dependent is read during render — no `window`, `matchMedia`,
+   `new Date()` or `Math.random()`, **and not in a lazy `useState` initialiser**,
+   which runs during render and reads as safe but is not.
+2. Reduced motion is CSS, not JS.
+3. **No `React.lazy` in the tree `renderToString` walks.** Client-only pieces
+   mount inside an effect; code-splitting uses `import()` inside that effect.
+4. The build asserts every prerendered page contains real content and clears a
+   size floor, and exits non-zero otherwise.
 
-Do not fabricate employers, projects, technologies, dates, metrics, job titles, education, certifications, contact information, clients, awards, or GitHub repositories. If factual information is unavailable, leave it out or clearly mark it for Andres to provide.
+The build month is baked in via `define` in `vite.config.ts` so date-dependent
+rendering stays deterministic.
 
-# Validation
+# Accessibility and quality
 
-Run:
-
-```bash
-npm run lint
-npm run build
-```
-
-Also verify desktop and mobile behavior, navigation links, WebGL fallback, reduced-motion behavior, and content accuracy.
+Semantic HTML, one `h1`, no skipped heading levels, visible focus on every
+interactive element, WCAG AA contrast (computed, not eyeballed), responsive
+from 320px, no console output in production.
 
 # Deployment
 
-The project is deployed with Vercel. `vercel.json` declares the Vite framework, `npm run build`, and `dist` output directory. Prefer Git-based deployments from `main` unless Andres explicitly asks for a manual CLI deploy.
-
-For now, after validated code changes are complete, commit and push them to `origin/main` so the live Vercel site picks them up.
+Vercel, Git-based from `main`. The apex `andresbotia.com` is authoritative and
+`vercel.json` 301s www to it — but the redirect direction is ultimately the
+project's primary-domain setting in the Vercel dashboard, not this file.
