@@ -3,8 +3,8 @@
 Design plan and agreed decisions for the andresbotia.com rebuild. Written before any
 production code exists, as the durable record of what was agreed.
 
-**Status:** built and shipped. Pass 2 complete — see §11 for measured results and the
-two items that remain in Andres's hands.
+**Status:** built and shipped. Pass 2 complete — see §11 for measured results and §12 for
+the two items that remain in Andres's hands. §13 records a later round of tweaks.
 
 ---
 
@@ -662,3 +662,127 @@ levels. The mode switcher operates from the keyboard.
 Name-query ranking is also driven by consistent off-site profiles. GitHub, LinkedIn and any
 other bio should use the same spelled-out name and link back to the site, because that is
 what `sameAs` in the Person markup is there to corroborate.
+
+
+---
+
+## 13. Post-launch tweaks
+
+### 13.1 Hero line rewritten
+
+> Software engineer, currently working in aviation at Banyan Air.
+
+Replaces the previous line. The `h1` is untouched and still does not animate — it is the LCP
+element. The old line survives nowhere; the JSON-LD `description` follows `profile.lead`
+automatically.
+
+### 13.2 Decode animation — resolving the conflict with §5
+
+§5 allows **one** orchestrated page-load moment, and the glyph field already had it. Two
+options were rejected before building:
+
+- **Sequencing them** (field settles, then text decodes) produces two beats, and moves
+  attention right-to-left, against reading order.
+- **Two independent effects** is exactly the "competing for attention" the motion budget
+  exists to prevent.
+
+**What was built instead: one gesture on two surfaces — the hero resolving from noise into
+signal.** The decode's charset *is* the glyph field's own measured ramp (`·:~+xow&@`) plus a
+few width-matched additions, so this is the same alphabet appearing in two places rather than
+a decode effect bolted onto a canvas fade. Both start at first paint; `--dur-field-in` moves
+900ms → 1600ms to share the envelope, and the text locks at 1.9s, so the periphery calms
+fractionally before the sentence completes. One arc, one resolution, then stillness apart
+from the 90-second rotation.
+
+Locked characters take `--read`; unresolved ones take `--instrument`. Colouring the whole
+line while it ran made the finished words snap from accent to grey at the end — a second
+moment, which is what this is designed not to be.
+
+**Accessibility.** While running, the visible layer is `aria-hidden` and a visually-hidden
+sibling carries the real sentence. `aria-live="off"` was considered and rejected: it
+suppresses announcements of *changes*, but a user navigating onto the line mid-animation is
+still read whatever the text node currently holds — gibberish. Verified by walking the
+subtree the way assistive tech does, skipping `aria-hidden` and `visibility:hidden`; the
+exposed string is the correct sentence at every point. Both the extra node and the
+`aria-hidden` exist only while running, so the prerendered HTML and the resting DOM are a
+single clean `<p>`.
+
+**No layout shift.** Each word renders a `visibility:hidden` ghost of its final text that
+sets the box, with the animating characters absolutely positioned and clipped inside it.
+Every word occupies exactly its resolved size throughout, so nothing re-wraps — with no
+JavaScript measurement. `visibility:hidden` rather than `opacity:0` so the ghost is also out
+of the accessibility tree and the sentence is not exposed twice.
+
+~60 lines of vanilla rAF, no library. Runs once per page load; scrolling away and back does
+not retrigger. Under `prefers-reduced-motion` the effect never starts.
+
+**The motion list in §5 gains one row and changes one:**
+
+| what | when | why |
+|---|---|---|
+| hero line decode | load, 1.9s | Shares the field's envelope and its alphabet. One moment, two surfaces. |
+| glyph fade-in | load, **1600ms** (was 900ms) | Extended to share that envelope rather than land on its own beat. |
+
+### 13.3 Favicon
+
+`public/favicon.svg` was still the Vite lightning bolt. The mark is now the hero's turbofan
+reduced to what survives 16×16 — six swept blades and a lit hub, on true black, in the
+field's hue. The hero's fan has sixteen blades, which at 16px is a grey smudge; a favicon
+needs its own simplified form, not the drawing scaled down. Blade sweep stays under one
+pitch, the same rule the renderer depends on.
+
+`scripts/icons.mjs` generates the set from one source mark: `favicon.svg`, a multi-size
+`favicon.ico` (16/32/48), 16×16 and 32×32 PNGs, a 180×180 apple-touch-icon, a 512 icon, and
+`site.webmanifest` with `theme_color` and `background_color` matching the existing `#000000`.
+Dev-only; never runs on Vercel. Verified by loading the built site in a headed browser and
+capturing the OS-level tab strip — the mark renders in the tab.
+
+### 13.4 Hero centring at mobile widths
+
+At 390px the field sat flush left with all 15px of the column's slack on the right.
+
+**The cause was not a leftover margin.** `.hero__field` sets `width:100%` with
+`max-width:20rem`, so it cannot fill its grid area — and a grid item that cannot stretch
+falls back to `start` alignment. `justify-self:center` is the alignment a constrained box
+actually needs; a margin patch would have hidden it at one width and reappeared at another.
+Desktop is unchanged and still deliberately asymmetric, with `justify-self:end` stated
+explicitly so the auto margin and the alignment property are not silently competing.
+
+| viewport | left gap | right gap |
+|---|---|---|
+| 320 | 0 | 0 |
+| 390 | 8 | 7 |
+| 768 | 186 | 185 |
+| 1440 | — | bleed, intended |
+
+Also removed `body { min-width: 320px }`, a leftover from the old stylesheet: at a 320px
+viewport with a classic 15px scrollbar it forced the body wider than the visible area and
+produced genuine horizontal scroll. The layout is fluid below 300px without it.
+
+### 13.5 Two bugs found while verifying
+
+- **Six eslint `no-undef` errors in `scripts/og.mjs`** had been failing since that file was
+  added. Its `page.evaluate` callbacks are written in Node but execute in the browser, and
+  the script override only declared Node globals. They went unnoticed because lint was being
+  piped through `tail`, which replaces the command's exit status with `tail`'s. Exit codes
+  are now checked directly.
+- **Nine unreferenced PNGs** left behind by the cut project carousels — 3.4 MB still being
+  deployed. Deleted.
+
+### 13.6 Re-measured
+
+Lighthouse on the built site, after all of the above:
+
+| | |
+|---|---|
+| Performance | **97** |
+| Accessibility | **100** |
+| Best practices | **100** |
+| SEO | **100** |
+
+LCP 2.6s · **CLS 0** · TBT 20ms · FCP 1.4s · colour contrast PASS.
+
+Measured directly in a real browser across the whole load including the decode, CLS is
+0.00033 — the residue is the last word's box switching from an inline-block ghost back to a
+plain text node. Lighthouse reports 0. Both numbers are recorded rather than picking the
+flattering one; it is 0.3% of the 0.1 budget either way.
