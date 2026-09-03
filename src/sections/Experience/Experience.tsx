@@ -26,8 +26,23 @@ export function Experience() {
   const longest = longestSpan(BUILD_MONTH);
 
   return (
-    <section className="band" id="experience" aria-labelledby="experience-heading">
+    <section
+      className="band band--experience"
+      id="experience"
+      aria-labelledby="experience-heading"
+    >
       <div className="band-inner">
+        {/*
+          The progress trace. It is not a new element in the design: it sits
+          exactly on the spine that already runs down every section, and in this
+          one section that hairline inks in as you read. The section is
+          chronological, so filling it encodes progress through the five years
+          rather than decorating the scroll.
+        */}
+        <div className="trace" aria-hidden="true">
+          <span className="trace-fill" />
+        </div>
+
         <div className="band-row">
           <div className="band-rail">
             <span className="rail-note">Experience</span>

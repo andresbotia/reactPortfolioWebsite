@@ -85,6 +85,8 @@
      moment rather than as two effects competing in the same hero. */
   --dur-field-in: 1600ms;
   --dur-decode: 1900ms;
+  /* Orbital mode crossfade. */
+  --dur-crossfade: 260ms;
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
@@ -100,5 +102,6 @@
     --dur-underline: 0ms;
     --dur-field-in: 0ms;
     --dur-decode: 0ms;
+    --dur-crossfade: 0ms;
   }
 }

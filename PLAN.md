@@ -4,7 +4,7 @@ Design plan and agreed decisions for the andresbotia.com rebuild. Written before
 production code exists, as the durable record of what was agreed.
 
 **Status:** built and shipped. Pass 2 complete — see §11 for measured results and §12 for
-the two items that remain in Andres's hands. §13 and §14 record later rounds of tweaks.
+the two items that remain in Andres's hands. §13, §14 and §15 record later rounds of work.
 
 ---
 
@@ -857,3 +857,93 @@ Four fields in `src/data/profile.ts` were rendered nowhere and had survived the 
 - `headline`, `initials` — superseded by `name` and by dropping the old circular brand mark.
 
 Deleting them removes the risk of that wording being reintroduced by being reached for later.
+
+---
+
+## 15. Scroll motion
+
+Two effects, deliberately different in mechanism. §5 caps the page at one orchestrated
+*load* moment, which the hero holds; these are scroll-responsive and section-specific. The
+rule they respect is the one that matters: **no repeated formula.** Nothing was added to
+Yearly Tracker, Grand Slam Insights or Contact, and nothing should be — the point is that
+these two are structurally unlike each other, not that every section gets a treatment.
+
+| | Orbital | Experience |
+|---|---|---|
+| mechanism | `IntersectionObserver`, fires once | CSS scroll-driven timeline, continuous |
+| what it does | demonstrates the product's modes | tracks reading position |
+| JS | a few timers, then nothing | none |
+| animated property | `opacity` | `transform: scaleY` |
+
+Both animate only compositor properties, so **neither can produce layout shift by
+construction** — not merely by measurement.
+
+### 15.1 Orbital — mode crossfade
+
+The four captures now stack in a fixed-aspect frame and crossfade, instead of one `<img>`
+swapping `src`. On first entry the sequence steps Overview → Aviation → Space → Earth →
+Overview at 420ms a step, about 1.9s in total. Measured: `0@4ms → 1@640 → 2@1064 → 3@1475 →
+0@1901`.
+
+This is a demonstration, not a reveal. It shows the mode-switching the project actually has,
+using the assets the manual control already uses, which is why nothing like it appears on the
+other two projects.
+
+- **Fires once.** The observer disconnects on first intersection; scrolling away and back
+  leaves it resting on Overview.
+- **The user always wins.** A click sets a claimed flag, clears every pending timer and is
+  permanent. Verified: clicking Earth mid-sequence holds index 3 through the remaining 1.6s,
+  and manual switching works normally afterwards.
+- **Slow networks degrade to a shorter sequence, not a broken one.** The order is built from
+  captures that have actually decoded; undecoded modes are skipped. If fewer than two are
+  ready at intersection, the sequence hands off to the image's `onLoad` rather than blocking
+  behind a round trip.
+- **Reduced motion** skips the sequence entirely and shows the resting capture. Verified:
+  still index 0 after 2.2s.
+- Stacking also fixed a pre-existing bug: the old switcher swapped `src`, so each mode
+  flashed empty the first time it was chosen.
+
+### 15.2 Experience — timeline progress trace
+
+The section's existing spine inks in as it is read. Not a new element: it sits exactly on the
+hairline that already runs down every section, and because Experience is chronological,
+filling it encodes progress through the five years.
+
+CSS-only via `animation-timeline: view()`. No scroll listener, no per-frame JavaScript, and
+therefore no possibility of interleaved layout reads and writes. Measured over a 120-frame
+scroll: median frame gap 6.1ms, p95 6.2ms, max 12.1ms, **zero frames over 32ms, zero long
+tasks.**
+
+**The range took two corrections**, both found by measuring rather than by reading the spec:
+
+| range | result |
+|---|---|
+| `cover` | Topped out at **scaleY 0.852**. It only completes once the section's bottom clears the viewport top, and there is not enough page below Experience to scroll that far, so the trace read as permanently unfinished. |
+| `entry 0% entry 100%` | Overcorrected. For a subject taller than the viewport the entry range is clamped, so it filled by the time the section's top reached the viewport top — when reading *starts*. |
+| `entry 0% contain 100%` | Correct. Measured 0 → 0.211 → 0.499 → 0.788 → 1.0 across the section, and 1.0 at the bottom of the page. |
+
+**Colour** is `--dim` on a `--rule-soft` track. The first attempt used `--rule`, which sits so
+close to `--rule-soft` in value that the filled and unfilled halves were indistinguishable —
+a progress trace nobody can read is just a line. `--dim` is the existing small-secondary-text
+colour, so it stays quiet while the progression is legible. No new token, no glow, no pulse.
+
+**Fallback and reduced motion are the same thing:** `scaleY(1)`, a complete hairline,
+indistinguishable from the spine every other section already has. Browsers without
+scroll-driven animations (Safari, Firefox at time of writing) therefore get the page without
+the effect rather than a broken one. Verified: `scaleY` stays 1 across scroll positions under
+`prefers-reduced-motion`.
+
+**Desktop only, above 900px.** Below that the rail collapses to a horizontal row and the
+vertical spine this inhabits does not exist. Inventing structure on mobile to host a
+decoration is the opposite of what this design does, so the effect is absent there and the
+section renders exactly as before. This is a deliberate deviation from the brief's request
+for a mobile screenshot of the trace.
+
+### 15.3 Re-measured
+
+Performance 96, accessibility 100, best practices 100, SEO 100. LCP 2.8s, TBT 0ms.
+
+Lighthouse reports CLS 0.002. Isolated in a real browser with a full scroll pass: 0.00082
+with motion, **0.00000 under reduced motion**, and the shifts all fall in the 639–1118ms
+window, which is the hero decode's. It is the pre-existing residue recorded in §13.6, not the
+new effects — as expected, since opacity and transform cannot shift layout.

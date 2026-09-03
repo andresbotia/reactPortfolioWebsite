@@ -1,45 +1,6 @@
-import { useState } from "react";
 import { lead, projects } from "../../data/projects";
+import { ShotViewer } from "./ShotViewer";
 import "./Work.css";
-
-function ShotViewer() {
-  const shots = lead.shots ?? [];
-  const [active, setActive] = useState(0);
-  const shot = shots[active];
-  if (!shot) return null;
-
-  return (
-    <figure className="shot">
-      <img
-        className="shot-image"
-        src={shot.src}
-        alt={shot.alt}
-        width={1600}
-        height={1000}
-        loading="lazy"
-        decoding="async"
-      />
-      {/*
-        The app's own four modes. This is the one place on the page that moves
-        in response to a click, and it moves because it is showing something
-        real about the product rather than decorating it.
-      */}
-      <figcaption className="shot-modes">
-        {shots.map((s, i) => (
-          <button
-            key={s.mode}
-            type="button"
-            className="shot-mode"
-            aria-pressed={i === active}
-            onClick={() => setActive(i)}
-          >
-            {s.mode}
-          </button>
-        ))}
-      </figcaption>
-    </figure>
-  );
-}
 
 export function Work() {
   return (
