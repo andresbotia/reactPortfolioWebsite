@@ -4,7 +4,7 @@ Design plan and agreed decisions for the andresbotia.com rebuild. Written before
 production code exists, as the durable record of what was agreed.
 
 **Status:** built and shipped. Pass 2 complete — see §11 for measured results and §12 for
-the two items that remain in Andres's hands. §13, §14 and §15 record later rounds of work.
+the two items that remain in Andres's hands. §13 through §16 record later rounds of work.
 
 ---
 
@@ -878,7 +878,7 @@ these two are structurally unlike each other, not that every section gets a trea
 Both animate only compositor properties, so **neither can produce layout shift by
 construction** — not merely by measurement.
 
-### 15.1 Orbital — mode crossfade
+### 15.1 Orbital — mode crossfade  *(superseded by §16.2)*
 
 The four captures now stack in a fixed-aspect frame and crossfade, instead of one `<img>`
 swapping `src`. On first entry the sequence steps Overview → Aviation → Space → Earth →
@@ -947,3 +947,100 @@ Lighthouse reports CLS 0.002. Isolated in a real browser with a full scroll pass
 with motion, **0.00000 under reduced motion**, and the shifts all fall in the 639–1118ms
 window, which is the hero decode's. It is the pre-existing residue recorded in §13.6, not the
 new effects — as expected, since opacity and transform cannot shift layout.
+
+---
+
+## 16. Video loop, and the trace on Work
+
+### 16.1 Can Orbital be iframed?
+
+**Yes.** The deployment sends no `X-Frame-Options` and no CSP `frame-ancestors`; a real
+cross-origin iframe loaded it with no framing errors logged. Its only notable headers are
+`Access-Control-Allow-Origin: *` and `Content-Disposition: inline`.
+
+So "mini live version" is not off the table technically. It is still the wrong call, for a
+sharper reason than general caution: embedding it runs a second Three.js globe with SGP4
+propagation and polling against roughly ten endpoints *inside the portfolio page*. That is
+the same cost profile deliberately removed in §10 step 4, when the 886 KB Three.js background
+came out and took the site's only console warnings with it. Every portfolio visit would also
+become traffic against Orbital's upstream providers. Recorded footage gives the same
+impression for 572 KB and no runtime.
+
+### 16.2 The crossfade is replaced by a recording
+
+**§15.1 is superseded.** The four-image crossfade is gone.
+
+The idea was right and the mechanism was wrong. Cutting between stills every 420ms reads as a
+stutter rather than as software running, because nothing moves *within* a mode — the globe
+does not turn, the event stream does not fill, the counters do not tick. Slowing the timing
+down would not have fixed that; it would have produced a slow stutter. Only real footage
+shows what the product does.
+
+**The capture.** A screen recording of the live deployment at 1280×800, driven through its
+own Overview → Aviation → Space → Earth → Overview cycle with a 4.5–5s dwell on each, which
+is long enough to read a mode rather than glimpse it. The first 16 seconds — the staged boot
+sequence — are trimmed off, and it lands back on Overview so the loop closes cleanly.
+
+**The encode.** Playwright's bundled ffmpeg is a stripped build: `libvpx` VP8 only, WebM muxer
+only, no H.264 and no VP9, and even the `fps` filter is not compiled in. Rather than add a
+~35 MB `ffmpeg-static` devDependency for a codec change, the file was encoded as VP8 at
+1152×720 and 20fps. Three quality points (crf 30/34/38) all landed within 20 KB of each other
+because the content is mostly flat black, so the highest was taken.
+
+| | |
+|---|---|
+| format | WebM / VP8 |
+| dimensions | 1152 × 720 |
+| duration | 27.0s at 20fps |
+| **size** | **572 KB** |
+
+VP8-in-WebM has been supported in Safari since 14.1, so coverage is effectively universal,
+and at 572 KB chasing VP9 or H.264 for perhaps 30% more was not worth a dependency.
+
+**Behaviour.**
+
+- `muted`, `loop`, `playsinline`, `preload="none"`, played only on `IntersectionObserver`
+  entry and paused on exit. Verified: zero requests for the file before the frame is in view,
+  one after.
+- **Poster is the resting capture** (`overview.webp`), so the frame is filled from the first
+  paint and stays filled if the video never arrives. On a throttled 1.6 Mbps link the poster
+  covers the frame while the video loads, and playback was running by 12s.
+- **Reduced motion never plays and never downloads** — zero requests for the 572 KB, poster
+  only. Verified.
+- **The switcher is unchanged.** Choosing a mode pauses the video, hides it, and shows that
+  mode's still, which is the relationship the crossfade had. Verified: clicking Space paused
+  and hid the video and left the Space capture showing.
+- Playback measured real-time with zero stalls: 0.124s of media per 0.12s of wall clock over
+  a 3s sample.
+- Zero layout shift — same fixed-aspect frame, everything absolutely filling it.
+
+### 16.3 The trace, now on Work as well
+
+Work is the page's other chronological list — Orbital 2026, Yearly Tracker 2026, Grand Slam
+Insights 2025 — so the filling hairline means the same thing there that it means in
+Experience: how far through the sequence you have read.
+
+The implementation was **moved, not copied**. The trace CSS now lives in `band.css` behind a
+`.band--trace` modifier and both sections opt in, so there is one implementation rather than
+two that can drift. Nothing was re-derived: the `cover` and `entry 0% entry 100%` false starts
+and the `--rule`/`--rule-soft` contrast problem from §15.2 were already settled.
+
+Verified identical in kind, not merely each correct on its own. Computed styles for both:
+
+```
+track  rgb(40, 36, 34)      width 1px       x 305px
+fill   rgb(122, 117, 111)   origin 0.5px 0px
+timeline view()             range entry contain
+```
+
+Progress across each section:
+
+| | 0% | 25% | 50% | 75% | 100% |
+|---|---|---|---|---|---|
+| Work | 0 | 0.226 | 0.500 | 0.774 | 1.000 |
+| Experience | 0 | 0.211 | 0.499 | 0.788 | 1.000 |
+
+### 16.4 Re-measured
+
+Performance 96, accessibility 100, best practices 100, SEO 100. LCP 2.8s, **CLS 0**, TBT 10ms.
+CLS on the throttled mobile load was 0.00002.

@@ -71,6 +71,23 @@
   opacity: 1;
 }
 
+/* The recording occupies exactly the same box as the stills and crossfades with
+   them, so choosing a mode is a swap rather than a jump. */
+.shot-video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--dur-crossfade) var(--ease);
+}
+
+.shot-video.is-active {
+  opacity: 1;
+}
+
 .shot-modes {
   display: flex;
   flex-wrap: wrap;

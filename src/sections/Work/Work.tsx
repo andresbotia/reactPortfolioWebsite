@@ -4,8 +4,22 @@ import "./Work.css";
 
 export function Work() {
   return (
-    <section className="band" id="work" aria-labelledby="work-heading">
+    <section
+      className="band band--trace"
+      id="work"
+      aria-labelledby="work-heading"
+    >
       <div className="band-inner">
+        {/*
+          The same progress trace Experience uses. Work is the other
+          chronological list on the page — Orbital 2026, Yearly Tracker 2026,
+          Grand Slam Insights 2025 — so the filling hairline means the same
+          thing here that it means there.
+        */}
+        <div className="trace" aria-hidden="true">
+          <span className="trace-fill" />
+        </div>
+
         <div className="band-row">
           <div className="band-rail">
             <span className="rail-note">Selected work</span>

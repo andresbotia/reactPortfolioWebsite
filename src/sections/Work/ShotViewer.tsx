@@ -1,128 +1,90 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { lead } from "../../data/projects";
 
 /*
- * Orbital's mode switcher, plus a one-time crossfade through the four modes
- * when the case study first scrolls into view.
+ * Orbital's frame: a screen recording of the live app cycling its own modes,
+ * with the manual switcher on top.
  *
- * Why this is not a reveal animation: the sequence shows the product's actual
- * mode-switching, using the same four captures the manual control uses. It is a
- * demonstration, not a fade-in, which is why it belongs here and why nothing
- * like it appears on the other two projects.
+ * This replaces a four-image crossfade that stepped every 420ms. The idea was
+ * right and the mechanism was wrong: cutting between stills reads as a stutter
+ * rather than as software running, because nothing moves *within* a mode. The
+ * recording shows the globe turning, the event stream filling and the telemetry
+ * updating, which is what the project actually is. Slowing the crossfade down
+ * would not have fixed that; only real footage does.
  *
- * The four images are stacked and crossfaded rather than swapped on one <img>.
- * That also fixes the manual switcher, which previously swapped `src` and so
- * flashed empty the first time each mode was chosen.
+ * The video is the idle state. Choosing a mode pauses it and shows that mode's
+ * still, which is the same relationship the crossfade had with the switcher.
  */
-
-const HOLD_MS = 420;
 
 export function ShotViewer() {
   const shots = lead.shots ?? [];
-  const [active, setActive] = useState(0);
+  /* null means idle: the recording is what you see. A click selects a still and
+     there is no way back, which is deliberate — once someone has taken control
+     of the control, it stays theirs. */
+  const [selected, setSelected] = useState<number | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
-
-  /* Loaded flags live in a ref as well as state: the timers read current values
-     without being torn down and rebuilt, while the render still updates. */
-  const [, bumpLoaded] = useState(0);
-  const loadedRef = useRef<boolean[]>(shots.map(() => false));
-
-  /* Set the moment the user touches the control. Once true the auto-sequence is
-     over for good: it never fights a real click. */
-  const claimedRef = useRef(false);
-  const playedRef = useRef(false);
-  const pendingRef = useRef(false);
-  const timersRef = useRef<number[]>([]);
-
-  const clearTimers = useCallback(() => {
-    timersRef.current.forEach((t) => window.clearTimeout(t));
-    timersRef.current = [];
-  }, []);
-
-  const startSequence = useCallback(() => {
-    pendingRef.current = false;
-    if (claimedRef.current) return;
-
-    /* Built from what has actually decoded. A mode whose capture has not
-       arrived is skipped rather than shown as an empty frame, so a slow
-       connection degrades to a shorter sequence instead of a broken one. */
-    const order: number[] = [];
-    for (let i = 1; i < loadedRef.current.length; i++) {
-      if (loadedRef.current[i]) order.push(i);
-    }
-    if (order.length === 0) return;
-    order.push(0); /* land back on the resting mode */
-
-    order.forEach((index, step) => {
-      timersRef.current.push(
-        window.setTimeout(
-          () => {
-            if (claimedRef.current) return;
-            setActive(index);
-          },
-          (step + 1) * HOLD_MS
-        )
-      );
-    });
-  }, []);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const selectedRef = useRef<number | null>(null);
 
   useEffect(() => {
     const node = frameRef.current;
     if (!node || typeof IntersectionObserver === "undefined") return;
-    /* Reduced motion gets the resting capture and no sequence at all. */
+    /* Reduced motion never plays and, because preload is none, never downloads
+       the 572 KB either. The poster is the resting capture, so the frame looks
+       finished rather than empty. */
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (!entries[0]?.isIntersecting) return;
-        /* Once only. Disconnecting here is what stops it re-firing on the way
-           back up and down again. */
-        observer.disconnect();
-        if (playedRef.current) return;
-        playedRef.current = true;
-
-        if (loadedRef.current.filter(Boolean).length > 1) startSequence();
-        /* Nothing to fade through yet, so hand off to onLoad rather than
-           blocking the sequence behind a network round trip. */
-        else pendingRef.current = true;
+        const video = videoRef.current;
+        if (!video) return;
+        if (entries[0]?.isIntersecting) {
+          if (selectedRef.current === null) void video.play().catch(() => undefined);
+        } else {
+          video.pause();
+        }
       },
-      { threshold: 0.35 }
+      { threshold: 0.25 }
     );
 
     observer.observe(node);
-    return () => {
-      observer.disconnect();
-      clearTimers();
-    };
-  }, [startSequence, clearTimers]);
-
-  const handleLoad = (index: number) => {
-    loadedRef.current[index] = true;
-    bumpLoaded((n) => n + 1);
-    if (pendingRef.current && loadedRef.current.filter(Boolean).length > 1) {
-      startSequence();
-    }
-  };
+    return () => observer.disconnect();
+  }, []);
 
   const choose = (index: number) => {
-    /* A real click ends the sequence immediately and permanently. */
-    claimedRef.current = true;
-    clearTimers();
-    setActive(index);
+    selectedRef.current = index;
+    setSelected(index);
+    videoRef.current?.pause();
   };
 
   if (!shots.length) return null;
+  const poster = shots[0]?.src;
 
   return (
     <figure className="shot">
-      {/* Fixed aspect ratio on the frame with the images absolutely filling it:
-          the box is identical before, during and after, so none of this can
-          shift the page. */}
+      {/* Fixed aspect ratio on the frame with everything absolutely filling it,
+          so the reserved box is identical whether the video, a still, or only
+          the poster is showing. Nothing here can shift the page. */}
       <div className="shot-frame" ref={frameRef}>
+        <video
+          ref={videoRef}
+          className={`shot-video${selected === null ? " is-active" : ""}`}
+          src="/orbital/modes.webm"
+          poster={poster}
+          muted
+          loop
+          playsInline
+          preload="none"
+          /* Decoration: the four stills below carry the real alt text, and the
+             surrounding prose already describes the modes. */
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+
         {shots.map((shot, i) => (
           <img
             key={shot.mode}
-            className={`shot-image${i === active ? " is-active" : ""}`}
+            className={`shot-image${i === selected ? " is-active" : ""}`}
             src={shot.src}
             alt={shot.alt}
             width={1600}
@@ -131,8 +93,7 @@ export function ShotViewer() {
             decoding="async"
             /* Only the visible capture is exposed; otherwise a screen reader
                reads four descriptions of the same figure. */
-            aria-hidden={i === active ? undefined : true}
-            onLoad={() => handleLoad(i)}
+            aria-hidden={i === selected ? undefined : true}
           />
         ))}
       </div>
@@ -148,7 +109,7 @@ export function ShotViewer() {
             key={shot.mode}
             type="button"
             className="shot-mode"
-            aria-pressed={i === active}
+            aria-pressed={i === selected}
             onClick={() => choose(i)}
           >
             {shot.mode}

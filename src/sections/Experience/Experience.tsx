@@ -27,7 +27,7 @@ export function Experience() {
 
   return (
     <section
-      className="band band--experience"
+      className="band band--trace"
       id="experience"
       aria-labelledby="experience-heading"
     >
