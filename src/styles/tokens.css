@@ -70,7 +70,15 @@
   /* One vertical hairline at a fixed x, identical on every section. The rail
      left of it carries only real data; it never moves, so the page reads as
      one document rather than as stacked section templates. */
-  --rail: 8rem;
+  /* Measured against the longest real date string the rail ever holds — "Oct
+     2021 – Dec 2023" and "May 2021 – Jul 2021" both render to 148.22px in
+     --mono at --size-value. The previous 8rem (128px) was never checked
+     against that; the .dates span is deliberately white-space:nowrap, so it
+     doesn't wrap to stay inside a too-narrow track, it just overflows past it
+     — straight into the vertical trace line's x-position on every section
+     where the trace renders (>=900px). 10rem (160px) clears the longest
+     string with ~12px to spare. */
+  --rail: 10rem;
   --rail-gap: clamp(1.5rem, 3.5vw, 3rem);
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
   --max: 72rem;

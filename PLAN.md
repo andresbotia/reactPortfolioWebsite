@@ -1044,3 +1044,94 @@ Progress across each section:
 
 Performance 96, accessibility 100, best practices 100, SEO 100. LCP 2.8s, **CLS 0**, TBT 10ms.
 CLS on the throttled mobile load was 0.00002.
+
+---
+
+## 17. The date-range/trace collision — a real bug, on the wrong axis
+
+A follow-up report described "overlap" between the Banyan and Cendyn blocks in Experience.
+The first diagnostic pass checked the wrong axis and found nothing, correctly — the second
+pass found a real, reproducible bug one axis over.
+
+### 17.1 What the first pass got right, and what it missed
+
+Exhaustive **vertical** geometry testing — bounding rects for every tenure block at seven
+widths (390–1440), on the live site and locally, in **three engines** (Chromium, WebKit,
+Firefox, the latter two installed specifically for this check) — found zero block-to-block
+overlap anywhere. Every gap was generously positive. That conclusion was correct: there is no
+vertical collision between entries.
+
+The bug was **horizontal**, at the same vertical position as the date text, which bounding-box
+comparisons between *different* entries would never surface — because it isn't between two
+entries at all. It's between one entry's date label and the shared trace line running through
+its own column.
+
+### 17.2 Diagnosis
+
+`.dates` (the tenure-level date range, e.g. "Oct 2021 – Dec 2023") is deliberately
+`white-space: nowrap` — it's a single fact and shouldn't break mid-range. The rail track
+(`--rail`, then `8rem` / 128px) was never checked against the actual rendered width of the
+longest such string. Using the Range API to measure real text extent (not the flex-stretched
+container box, which gave a false positive on `.rail-note` in a first attempt — see below):
+
+| string | rendered width |
+|---|---|
+| `Feb 2024 – present` | 140.42px |
+| `Oct 2021 – Dec 2023` | 148.22px |
+| `May 2021 – Jul 2021` | 148.22px |
+
+Against a 128px track, that's a 12.42–20.22px overflow — landing exactly on `.trace`'s
+`left: calc(gutter + rail)`, since `nowrap` means the text ignores its container's declared
+width and paints straight past it. Reproduces at every width where the trace actually renders
+(**≥900px** — below that, `.trace` is `display: none` by the existing responsive design, so
+there is categorically nothing to collide with; the bug does not exist at 390px, not because
+it was fixed there, but because the trace was never present there in the first place).
+
+**A false lead worth recording:** an early version of this measurement also flagged
+`.rail-note` (the location line) as crossing the trace. Isolating it with `getClientRects()`
+and the Range API showed the location text's real extent stops well short of the trace — the
+false positive came from measuring the flex-stretched *block* (`.rail-note` is blockified and
+stretched to the rail's full cross-axis width by `align-items: stretch`) rather than the text
+inside it. `.dates`'s overflow is real specifically because `nowrap` defeats that same stretch;
+`.rail-note` wraps normally and never leaves its box.
+
+### 17.3 Fix
+
+`--rail-gap` (the space between the rail and body columns) does nothing here — the overflow
+lands *in* that gap, anchored to the rail's own right edge, so widening the gap only pushes
+the body column further away without moving either the text or the trace. The trace's position
+is `gutter + rail`, so `--rail` is the only token that moves both the ceiling the text
+overflows past *and* the line it collides with, together.
+
+Considered and set aside: inserting the trace mid-gap instead of at the rail's edge — the gap
+itself is only 24–48px (`--rail-gap`'s clamp range) at the widths where this matters, and
+consuming most of it for clearance on one side would crowd the body column on the other,
+trading one crowding problem for a smaller one closer to the body text. Reformatting the dates
+(`'21` instead of `2021`) would also have worked but changes displayed content to solve a
+spacing problem, and reducing letter-spacing on a monospace face fights the font's own
+even-spacing design for a mediocre few pixels per character.
+
+`--rail: 8rem` → **`10rem`** (160px). One global token, so it also touches Work's rail (short
+year labels — pure gain, no downside) and the trace position everywhere it appears. Chosen
+against the measured worst case (148.22px) plus comfortable margin for cross-platform font
+hinting differences, rather than the bare minimum:
+
+| entry | clearance to trace after the fix |
+|---|---|
+| Feb 2024 – present | 19.58px |
+| Oct 2021 – Dec 2023 | 11.78px |
+| May 2021 – Jul 2021 | 11.78px |
+
+### 17.4 Verified
+
+- Re-ran the exact same measurement across all seven widths post-fix: **zero overflow**
+  anywhere the trace renders, real clearance at every entry.
+- **No regression on the vertical-gap findings from the first pass** — Experience's
+  tenure-to-tenure gaps are unchanged (30.8px at 390, 57.2px at 1440, matching the pre-fix
+  numbers exactly, since `--rail` has no effect on vertical spacing).
+- Work's rail-values (short years, "2026"/"2025") were never at risk — confirmed with 80px+
+  of clearance after the widen, no visible change to that section's balance.
+- Pixel-level crops at the date/trace intersection for both Banyan and Cendyn (the two
+  longest-date entries, not just Foot Locker's shorter one) at 1440px, plus 390px crops
+  showing the mobile rail with no trace to intersect.
+- `npm run lint` exit 0, `npm run build` exit 0, checked directly rather than through a pipe.
